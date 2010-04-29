@@ -1,0 +1,2 @@
+class HTML < Code
+end

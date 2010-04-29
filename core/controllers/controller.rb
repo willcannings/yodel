@@ -1,7 +1,7 @@
 module Yodel
   class Controller
-    def initialize(request, response, match)
-      @request, @response, @match = request, response, match
+    def initialize(request, response, match, site)
+      @request, @response, @match, @site = request, response, match, site
       @env = request.env
       
       # run before filters
@@ -22,6 +22,14 @@ module Yodel
     
     def match
       @match
+    end
+    
+    def site
+      @site
+    end
+    
+    def session
+      @env['rack.session']
     end
     
     def self.route(path, options = nil)

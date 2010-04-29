@@ -1,0 +1,2 @@
+class Email < String
+end

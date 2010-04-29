@@ -1,0 +1,2 @@
+class Code < Text
+end

@@ -1,0 +1,2 @@
+class AutocompletedString < String
+end

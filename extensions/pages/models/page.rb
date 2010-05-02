@@ -6,7 +6,7 @@ module Yodel
     # core page attributes
     key :permalink, String, display: false, required: true, unique: true, index: true, searchable: false
     key :title, String, required: true
-    key :content, String, display_as: :html
+    key :content, HTML
     
     # behaviour tab
     key :show_in_menus, Boolean, tab: 'Behaviour'
@@ -14,8 +14,8 @@ module Yodel
     belongs_to :layout, class: Yodel::Layout, display: true, required: false, tab: 'Behaviour'
     
     # SEO tab
-    key :description, String, display_as: :text, tab: 'SEO'
-    key :keywords, String, display_as: :text, tab: 'SEO'
-    key :custom_meta_tags, String, display_as: :text, tab: 'SEO', searchable: false
+    key :description, Text, tab: 'SEO'
+    key :keywords, Text, tab: 'SEO'
+    key :custom_meta_tags, Text, tab: 'SEO', searchable: false
   end
 end

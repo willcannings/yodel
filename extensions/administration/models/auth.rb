@@ -3,6 +3,7 @@
 
 module Yodel
   class User < Record
+    creatable
     belongs_to :group
     
     key :username, String, required: true, index: true
@@ -10,6 +11,7 @@ module Yodel
   end
   
   class Group < Hierarchical
+    creatable
     has_many :users, dependent: :destroy, class: Yodel::User
     key :name, String, required: true
   end

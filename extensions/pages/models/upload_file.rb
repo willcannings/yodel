@@ -1,5 +1,5 @@
 module Yodel
-  class UpoadFile < Record
+  class UploadFile < Record
     creatable
     key :name, String, required: true, index: true
     attachment :upload

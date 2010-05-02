@@ -31,25 +31,4 @@ module Yodel
       end
     end
   end
-  
-  class DefaultController < Controller
-    route "/"
-
-    def index
-      response.write "Hello World!"
-    end
-  end
-  
-  class VersionController < Controller
-    route "/version"
-    before_filter :say_hello
-
-    def index
-      response.write "1.0"
-    end
-    
-    def say_hello
-      puts "helooooooooooooooooooooo"
-    end
-  end
 end

@@ -5,11 +5,12 @@ module Yodel
     # class methods
     def self.tabs
       if !@tabs
-        @tabs = Set.new
-        @tabs << nil
+        tabs = Set.new
+        tabs << nil
 
         keys.each {|key| @tabs << key.options[:tab]}
         associations.each {|assoc| @tabs << assoc.query_options[:tab]}
+        @tabs = tabs.to_a
       end
       
       @tabs

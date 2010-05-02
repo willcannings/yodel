@@ -16,6 +16,10 @@ module Yodel
       @request
     end
     
+    def params
+      @request.params
+    end
+    
     def response
       @response
     end

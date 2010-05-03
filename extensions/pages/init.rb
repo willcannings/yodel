@@ -6,7 +6,3 @@ require File.join(File.dirname(__FILE__), 'models', 'layout')
 require File.join(File.dirname(__FILE__), 'models', 'page')
 require File.join(File.dirname(__FILE__), 'controllers', 'admin_page_controller')
 require File.join(File.dirname(__FILE__), 'controllers', 'admin_design_controller')
-
-Yodel.use_middleware do |app|
-  app.use Rack::Static, :urls => ["/static"], :root => Yodel.config.public_directory
-end

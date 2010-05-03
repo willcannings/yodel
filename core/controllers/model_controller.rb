@@ -4,7 +4,7 @@ module Yodel
       @route_prefix ||= prefix
     end
     
-    def self.handles(model, options={})
+    def self.handles(model)
       @model = model
       @name = model.name.split('::')[-1].to_s.singularize.underscore
       model.controller self

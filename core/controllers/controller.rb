@@ -81,6 +81,19 @@ module Yodel
     end
     
     
+    # rendering
+    def render_file(file, content='')
+      File.open(file, 'r') do |file|
+        render_string file.read, content
+      end
+    end
+    
+    def render_string(markup, content='')
+      context = RenderContext.new(self, content)
+      Erubis::Eruby.new(markup).evaluate(context)
+    end
+    
+    
     # controller routes
     # FIXME: needs to take a site parameter
     def self.route(path, options={})

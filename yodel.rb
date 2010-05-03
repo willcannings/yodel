@@ -6,6 +6,7 @@ require 'active_support/memoizable'
 require 'active_support/core_ext'
 require 'mongo_mapper'
 require 'pathname'
+require 'erubis'
 require 'json'
 require 'rack'
 require 'rack/contrib'
@@ -42,6 +43,11 @@ require File.join(File.dirname(__FILE__), 'core', 'extensions')
 Yodel.load_extensions(Yodel.config.yodel_root.join('extensions'))
 Yodel.load_extensions(Yodel.config.root.join('extensions'))
 Yodel.load_extensions(Yodel.config.root.join('app'))
+
+# by default, attachments are served from the public folder in the root of the app
+Yodel.use_middleware do |app|
+  app.use Rack::Static, :urls => ["/static"], :root => Yodel.config.public_directory
+end
 
 # finally load and start the yodel application
 Dir.chdir(Yodel.config.root)

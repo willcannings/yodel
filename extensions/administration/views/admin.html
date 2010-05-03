@@ -1,0 +1,24 @@
+<!-- DOCTYPE html -->
+<html>
+  <head>
+    <title><%= site.name %> CMS</title>
+    <link href="/admin_static/css/reset.css" rel="stylesheet" type="text/css">
+    <link href="/admin_static/css/admin.css" rel="stylesheet" type="text/css">
+    <%#= javascript_include_tag :defaults %>
+  </head>
+  <body>
+    <header>
+      <h1><%= site.name %> <span>CMS</span></h1>
+      <nav>
+        <menu>
+          <% Yodel.config.admin_tabs.reverse.each do |controller| %>
+            <li class='<%= controller == @controller.class ? 'selected' : '' %>'><a href="<%= controller.path_for :index %>"><%= controller.tab_name %></a></li>
+          <% end %>
+        </menu>
+      </nav>
+    </header>
+    <article>
+      <%= @content %>
+    </article>
+  </body>
+</html>

@@ -6,6 +6,7 @@ require 'active_support/memoizable'
 require 'active_support/core_ext'
 require 'mongo_mapper'
 require 'pathname'
+require 'json'
 require 'rack'
 require 'rack/contrib'
 
@@ -20,8 +21,9 @@ end
 MongoMapper.database = Yodel.config.database || "Yodel"
 
 # assign default values if needed
-Yodel.config.session_secret        ||= "yodel.session"
-Yodel.config.public_directory_name ||= "public"
+Yodel.config.session_secret             ||= "yodel.session"
+Yodel.config.public_directory_name      ||= "public"
+Yodel.config.attachment_directory_name  ||= "attachments"
 
 # determine root directories
 Yodel.config.yodel_root = Pathname.new(File.dirname(__FILE__))
@@ -29,6 +31,7 @@ Yodel.config.root = Yodel.config.yodel_root.join('..')
 Yodel.config.public_directory = Yodel.config.root.join(Yodel.config.public_directory_name)
 
 # initialise Yodel
+require File.join(File.dirname(__FILE__), 'core', 'mime_types')
 require File.join(File.dirname(__FILE__), 'core', 'routes')
 require File.join(File.dirname(__FILE__), 'core', 'controllers')
 require File.join(File.dirname(__FILE__), 'core', 'types')

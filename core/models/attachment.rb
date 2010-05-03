@@ -19,7 +19,7 @@ module Yodel
     end
     
     def relative_directory_path
-      @relative_directory_path ||= File.join(record.site.identifier, id.to_s)
+      @relative_directory_path ||= File.join(Yodel.config.attachment_directory_name, record.site.identifier, id.to_s)
     end
     
     def directory_path

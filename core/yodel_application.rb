@@ -24,10 +24,12 @@ module Yodel
       
       if controller_constant && (site = Site.find_by_domain(request.host))
         controller = controller_constant.new(request, response, match, site)
+        controller.run_before_filters
         controller.send(action)
+        controller.run_after_filters
         response.finish
       else
-        [404, {"Content-Type" => "text/plain"}, ["Not Found: #{request.path}"]]
+        [404, {"Content-Type" => "text/plain"}, ["URL Not Found: #{request.path}"]]
       end
     end
   end

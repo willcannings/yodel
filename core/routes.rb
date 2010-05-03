@@ -6,9 +6,7 @@ module Yodel
     end
     
     def <<(route)
-      method = route[:method].to_s.downcase.to_sym
-      path = Regexp.new("^#{Regexp.quote(route[:path].chomp('/')).gsub('/', '/+')}(.*)", nil, 'n') # from Rack::URLMap
-      @routes << [path, method, route[:controller], route[:action]]
+      @routes << Route.new(route)
     end
     
     def sort_routes!
@@ -19,19 +17,49 @@ module Yodel
     def match_request(request)
       sort_routes! unless @sorted
       request_method = request.request_method.downcase.to_sym
+      path = request.path_info
       
-      @routes.each do |path, method, controller, action|
-        next unless method == :any || method == request_method
-        next unless match = path.match(request.path_info)
-        return [controller, action, match]
+      @routes.each do |route|
+        match = route.match(path, request_method)
+        return [route.controller, route.action, match] unless match.nil?
       end
       
       [nil, nil, nil]
     end
+    
+    def path_for(controller, action, options)
+      @routes.each do |route|
+        return route.path_with_options(options) if route.controller == controller && route.action == action
+      end
+      nil
+    end
   end
   
-  @@routes = RouteSet.new
+  class Route
+    attr_accessor :method, :original_path, :path, :controller, :action
+    def initialize(route)
+      @method = route[:method].to_s.downcase.to_sym
+      @original_path = route[:path]
+      @path = Regexp.new("^#{Regexp.quote(route[:path].chomp('/')).gsub('/', '/+')}(?<format>\\.\\w+)?(?<glob>.*)", nil, 'n') # from Rack::URLMap
+      @controller = route[:controller]
+      @action = route[:action]
+    end
+    
+    def match(path, request_method)
+      return nil unless @method == :any || @method == request_method
+      @path.match(path)
+    end
+    
+    def path_with_options(options={})
+      path = @original_path.dup
+      options.each do |name, value|
+        path.gsub!(/\(\?\<#{name}\>.+\)/, value.to_s)
+      end
+      path
+    end
+  end
+  
   def self.routes
-    @@routes
+    @routes ||= RouteSet.new
   end
 end

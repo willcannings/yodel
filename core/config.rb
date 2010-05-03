@@ -16,8 +16,7 @@ module Yodel
     end
   end
   
-  @@config = Config.new
   def self.config
-    @@config
+    @config ||= Config.new
   end
 end

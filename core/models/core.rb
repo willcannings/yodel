@@ -18,6 +18,13 @@ module Yodel
       self._id.to_s
     end
     
+    def to_json_hash
+      attrs = self.attributes
+      attrs.delete('_id')
+      attrs['id'] = self.id.to_s
+      attrs
+    end
+    
     # attachment helpers
     def self.attachment(name)
       class_eval "has_one :#{name}, class: Yodel::Attachment, dependent: :destroy, display: true"
@@ -27,6 +34,16 @@ module Yodel
     def self.image(name, sizes={})
       class_eval "has_one :#{name}, class: Yodel::ImageAttachment, dependent: :destroy, display: true, sizes: #{sizes.inspect}"
       define_attachment_setter(name)
+    end
+    
+    # record classes can have an associated controller
+    def self.controller(controller)
+      @controller = controller
+    end
+    
+    def self.inherited(child)
+      super(child)
+      child.instance_variable_set('@controller', @controller)
     end
     
     private

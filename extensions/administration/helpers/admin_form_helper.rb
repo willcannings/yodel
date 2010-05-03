@@ -1,11 +1,33 @@
 module Yodel
   module AdminFormHelper
-    def html_for_model(model, tab)
+    def form_for_model(model)
+      # collect the html for each tab of the record
+      tabs = {}
+      
       html = "<table>"
-      fields = model.class.keys.values.reject {|k| k.name.starts_with? '_'}.reject {|k| k.options[:display] == false}.select {|k| k.options[:tab] == tab}.collect do |key|
-        html << "<tr><td>" << key.name.humanize << ":</td><td>" << html_for_key(model, key) << "</td></tr>"
+      # FIXME: cleanup; move these reject conditions to the html_for_key function
+      model.class.keys.values.reject {|k| k.name.starts_with?('_') || k.options[:display] == false || k.type.nil?}.collect do |key|
+        tab_name = key.options[:tab]
+        if !tabs[tab_name]
+          tabs[tab_name] = "<table class='tab_content' id='#{(tab_name || 'main').underscore}_content'>"
+        end
+        tabs[tab_name] << "<tr><td>" << key.name.humanize << ":</td><td>" << html_for_key(model, key) << "</td></tr>"
       end
-      html << "</table>"
+      model.class.associations.values.select {|a| a.query_options[:display]}.collect do |association|
+        tab_name = association.query_options[:tab]
+        if !tabs[tab_name]
+          tabs[tab_name] = "<table class='tab_content' id='#{tab_name.underscore}_content'>"
+        end
+        tabs[tab_name] << "<tr><td>" << association.name.to_s.humanize << ":</td><td>" << html_for_association(model, association) << "</td></tr>"
+      end
+      
+      # generate output for the entire record
+      # the nil tab is the main tab
+      html = "<div class='model_form'>" << tabs[nil] << "</table><ul>"
+      tabs.keys.reject(&:nil?).each do |tab_name|
+        html << "<li id='#{tab_name.underscore}'>#{tab_name}" << tabs[tab_name] << "</table></li>"
+      end
+      html << "</ul></div>"
     end
     
     def html_for_key(model, key)
@@ -30,8 +52,7 @@ module Yodel
         association.klass.all(site_id: model.site_id).each do |record|
           html << "<option value='#{record._id.to_s}'>#{record.name}</option>"
         end
-        html << "</select>"
-        return html
+        return html << "</select>"
       end
       
       # only belongs_to is supported for now

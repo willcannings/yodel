@@ -1,6 +1,6 @@
 module Yodel
   class RenderContext
-    def initialize(controller, content)
+    def initialize(controller)
       controller.params.each_pair do |name, value|
         instance_variable_set variabalise_name(name), value
       end
@@ -10,7 +10,6 @@ module Yodel
       end
       
       @controller = controller
-      @content = content
     end
   
     def method_missing(name, *args)

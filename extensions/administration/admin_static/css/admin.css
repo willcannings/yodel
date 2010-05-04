@@ -11,12 +11,12 @@ a:hover {
 }
 
 header {
-  display: block;
   height: 100px;
+  width: 100%;
   background-color: #9BAAB1;
   background: -moz-linear-gradient(#9BAAB1, #BFD2DA);
   background: -webkit-gradient(linear, left top, left bottom, from(#9BAAB1), to(#BFD2DA));
-  position: relative;
+  position: fixed;
   overflow: hidden;
 }
 
@@ -37,7 +37,7 @@ header {
   
   header menu {
     position: absolute;
-    right: 0px;
+    right: 15px;
     bottom: 0px;
   }
   
@@ -80,16 +80,20 @@ header {
 article {
   display: block;
   padding: 30px 30px 30px 30px;
-  position: relative;
+  position: fixed;
+  top: 100px;
+  left: 0px;
+  right: 0px;
 }
 
-  aside {
+  aside.items {
     position: fixed;
     top: 130px;
     left: 30px;
+    bottom: 30px;
   }
 
-    aside h1 {
+    aside.items h1 {
       font-size: 15px;
       color: #555;
       width: 330px;
@@ -105,13 +109,13 @@ article {
       -moz-border-radius-topright: 5px;
     }
 
-    aside h1 a {
+    aside.items h1 a {
       font-size: 11px;
       color: #999;
       float: right;
     }
     
-    aside ol {
+    aside.items ol {
       min-height: 100px;
       width: 350px;
       border: 1px solid #aaa;
@@ -125,11 +129,11 @@ article {
       left: 30px;
     }
     
-    aside ol.flat {
+    aside.items ol.flat {
       bottom: 45px;
     }
     
-      aside ol li {
+      aside.items ol li {
         font-size: 12px;
         height: 25px;
         line-height: 25px;
@@ -140,7 +144,7 @@ article {
         color: #333;
       }
       
-      aside ol li.selected {
+      aside.items ol li.selected {
         color: white;
         background-color: #53779B;
         background: -moz-linear-gradient(#53779B, #334C6B);
@@ -148,114 +152,129 @@ article {
         border-top: 1px solid #53779B;
       }
       
-        aside ol li img {
+        aside.items ol li img {
           float: left;
           padding-top: 4px;
           padding-right: 10px;
         }
         
-        aside ol li a.new_child {
+        aside.items ol li a.new_child {
           float: right;
           display: none;
         }
         
-        aside ol li:hover a.new_child {
+        aside.items ol li:hover a.new_child {
           display: block;
         }
         
-        aside ol li .delete {
+        aside.items ol li .delete {
           visibility: hidden;
           float: right;
         }
         
-        aside ol li:hover .delete {
+        aside.items ol li:hover .delete {
           visibility: visible;
         }
         
-        aside ol li a {
+        aside.items ol li a {
           color: #333;
         }
         
-        aside ol li.selected a {
+        aside.items ol li.selected a {
           color: white;
         }
 
-        aside ol li.indent_1 {
+        aside.items ol li.indent_1 {
           padding-left: 30px;
         }
         
-        aside ol li.indent_2 {
+        aside.items ol li.indent_2 {
           padding-left: 60px;
         }
         
-        aside ol li.indent_3 {
+        aside.items ol li.indent_3 {
           padding-left: 90px;
         }
         
-        aside ol li.indent_4 {
+        aside.items ol li.indent_4 {
           padding-left: 120px;
         }
         
-        aside ol li.indent_5 {
+        aside.items ol li.indent_5 {
           padding-left: 150px;
         }
         
-        aside ol li ol a, aside ol li.selected ol a {
+        aside.items ol li ol a, aside.items ol li.selected ol a {
           color: #333;
         }
       
-    aside a {
+    aside.items a {
       color: #999;
       font-size: 12px;
     }
     
-    aside a:hover {
+    aside.items a:hover {
       color: #555;
     }
     
-    aside #new_root {
+    aside.items #new_root {
       position: fixed;
       left: 30px;
     }
     
-    aside #new_root.flat {
+    aside.items #new_root.flat {
       bottom: 23px;
     }
     
-    aside #new_root.hierarchical {
+    aside.items #new_root.hierarchical {
       bottom: 10px;
     }
     
   section {
-    display: block;
-    position: absolute;
-    left: 430px;
-    right: 30px;
+    position: fixed;
+    top: 130px;
+    right: 0px;
+    bottom: 0px;
+    left: 410px;
+    overflow: auto;
+    padding: 0px 30px 30px 0px;
   }
-    
-    #new_record_type {
-      margin-bottom: 20px;
-    }
-    
-    section form table {
+  
+  section.has_sidebar {
+    padding-right: 80px;
+  }
+  
+  section.sidebar_open {
+    padding-right: 330px;
+  }
+  
+    section form {
+      display: block;
       width: 100%;
     }
-    
-    section form table td {
+  
+    section ul {
+      width: 100%;
+    }
+  
+    section li {
       padding-bottom: 20px;
     }
     
-    section form table tr td.label {
-      width: 100px;
+    section li div {
+      width: 100%;
     }
-  
-    section label {
+    
+    section li label {
+      display: block;
       font-size: 14px;
       font-weight: normal;
       color: #777;
-      width: 100px;
-      padding-top: 5px;
-      display: block;
+      margin-bottom: 7px;
+    }
+    
+    section li label.inline {
+      display: inline-block;
     }
     
     section input {
@@ -287,6 +306,18 @@ article {
       -moz-box-shadow: none;
       -webkit-border-radius: 0px;
       -moz-border-radius: 0px;
+      width: auto;
+      margin-left: 15px;
+    }
+    
+    section input[type=checkbox] {
+      width: auto;
+      height: auto;
+      margin-right: 15px;
+    }
+    
+    section select {
+      margin-left: 15px;
     }
     
     section textarea {
@@ -341,17 +372,100 @@ article {
       font-size: 12px;
       color: #333;
     }
-    
-    section input.datetimeselect {
-      border: none;
-      background: none;
-      display: inline;
-      -webkit-box-shadow: none;
-      -moz-box-shadow: none;
-      width: 180px;
-      text-align: left;
+  
+    /* side bar */
+    section.no_sidebar aside {
+      width: 0px;
+      padding: 0px;
     }
     
-    section .calendar_date_select_popup_icon {
-      float: left;
+    section.has_sidebar aside {
+      width: 10px;
+      opacity: 0.5;
     }
+    
+    section.has_sidebar aside:hover {
+      opacity: 1.0;
+    }
+    
+      section.has_sidebar aside ul {
+        display: none;
+      }
+
+    section.sidebar_open aside {
+      width: 250px;
+    }
+    
+    section aside {
+      background-color: #718894;
+      position: fixed;
+      right: 30px;
+      top: 130px;
+      bottom: 30px;
+      padding: 10px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+    }
+    
+      section aside a.close {
+        color: white;
+        position: absolute;
+        top: 9px;
+        right: 15px;
+        font-size: 15px;
+      }
+    
+      section.has_sidebar aside a {
+        display: none;
+      }
+          
+      section aside ul li {
+        font-size: 14px;
+        display: block;
+        margin-right: 20px;
+        float: left;
+      }
+      
+      section aside ul li a {
+        color: white;
+      }
+      
+      section aside ul li.selected {
+        text-decoration: underline;
+      }
+    
+        section aside ul li.selected ul {
+          display: block;
+        }
+        
+        section aside ul li ul {
+          position: absolute;
+          top: 35px;
+          left: 10px;
+          right: 10px;
+          bottom: 10px;
+          background-color: white;
+          -webkit-border-radius: 5px;
+          -moz-border-radius: 5px;
+          border-radius: 5px;
+          overflow: auto;
+          padding: 15px 10px 15px 10px;
+          display: none;
+          width: auto;
+        }
+        
+        section aside ul li ul li {
+          width: 100%;
+        }
+        
+        section aside ul li ul li label {
+          text-decoration: none;
+          border: none;
+        }
+        
+        section aside ul li ul li textarea {
+          height: 100px;
+        }
+        
+        

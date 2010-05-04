@@ -1,34 +1,43 @@
 module Yodel
   module AdminFormHelper
-    def form_for_model(model)
+    def form_for_model(model, url, method)
       # collect the html for each tab of the record
       tabs = {}
       
-      html = "<table>"
       # FIXME: cleanup; move these reject conditions to the html_for_key function
       model.class.keys.values.reject {|k| k.name.starts_with?('_') || k.options[:display] == false || k.type.nil?}.collect do |key|
         tab_name = key.options[:tab]
         if !tabs[tab_name]
-          tabs[tab_name] = "<table class='tab_content' id='#{(tab_name || 'main').underscore}_content'>"
+          tabs[tab_name] = "<ul class='#{tab_name ? 'tab_content' : 'main_content'}' id='#{model.class.name.demodulize.underscore}_#{(tab_name || 'main').underscore}_content'>"
         end
-        tabs[tab_name] << "<tr><td>" << key.name.humanize << ":</td><td>" << html_for_key(model, key) << "</td></tr>"
+        
+        if key.type.ancestors.include?(Boolean)
+          tabs[tab_name] << "<li>" << html_for_key(model, key) << "<label class='inline'>" << key.name.humanize << "</label></li>"
+        else
+          tabs[tab_name] << "<li><label>" << key.name.humanize << ":</label><div>" << html_for_key(model, key) << "</div></li>"
+        end
       end
       model.class.associations.values.select {|a| a.query_options[:display]}.collect do |association|
         tab_name = association.query_options[:tab]
         if !tabs[tab_name]
-          tabs[tab_name] = "<table class='tab_content' id='#{tab_name.underscore}_content'>"
+          tabs[tab_name] = "<ul class='#{tab_name ? 'tab_content' : 'main_content'}' id='#{model.class.name.demodulize.underscore}_#{(tab_name || 'main').underscore}_content'>"
         end
-        tabs[tab_name] << "<tr><td>" << association.name.to_s.humanize << ":</td><td>" << html_for_association(model, association) << "</td></tr>"
+        
+        tabs[tab_name] << "<li><label class='inline'>" << association.name.to_s.humanize << ":</label>" << html_for_association(model, association) << "</li>"
       end
       
       # generate output for the entire record
       # the nil tab is the main tab
-      html = "<div class='model_form'>" << tabs[nil] << "</table><ul>"
-      tabs.keys.reject(&:nil?).each do |tab_name|
-        html << "<li id='#{tab_name.underscore}'>#{tab_name}" << tabs[tab_name] << "</table></li>"
+      html = "<section class='model_form #{tabs.size > 1 ? 'has_sidebar' : 'no_sidebar'}' id='model_#{model.class.name.demodulize.underscore}' style='display: none'>
+              <form method='#{method || 'get'}' action='#{url}'>" << tabs[nil] << "</ul><aside><a href='#' class='close'>X</a><ul>"
+      
+      tabs.keys.reject(&:nil?).each_with_index do |tab_name, index|
+        html << "<li class='#{'selected' if index == 0}' id='#{model.class.name.demodulize.underscore}_#{tab_name.underscore}_content'><a href='#'>#{tab_name}</a>" << tabs[tab_name] << "</ul></li>"
       end
-      html << "</ul></div>"
+      
+      html << "</ul></aside><input type='submit' class='submit'><input type='button' class='cancel' value='Cancel'></form></section>"
     end
+    
     
     def html_for_key(model, key)
       ancestors = key.type.ancestors - [Comparable, Object, Kernel, BasicObject]
@@ -43,25 +52,26 @@ module Yodel
       raise "Unknown Key Type: unable to prepare html for key #{key.name} (#{key.type.name})"
     end
     
+    
     def html_for_association(model, association)
       return unless association.query_options[:display]
-      id = id_for_field(model, association.klass)
+      id = id_for_field(model, association)
 
       if association.type == :belongs_to
-        html = "<select name='#{id}' id='#{id}'>"
-        association.klass.all(site_id: model.site_id).each do |record|
-          html << "<option value='#{record._id.to_s}'>#{record.name}</option>"
-        end
-        return html << "</select>"
+        return html_for_belongs_to_association(model, association, id)
+      elsif association.type == :one && association.klass == Yodel::Attachment
+        return html_for_attachment(model, association, id)
       end
       
       # only belongs_to is supported for now
-      raise 'Unknown Association Type or Record Type: unable to prepare html for association'
+      raise "Unknown Association Type or Record Type: unable to prepare html for association #{association.klass.name}"
     end
     
+    
     def id_for_field(model, key)
-      "#{model.class.name.split("::")[-1].underscore}[#{key.name.split("::")[-1].underscore}]"
+      "#{model.class.name.demodulize.underscore}[#{key.name.to_s.demodulize.underscore}]"
     end
+    
     
     
     # keys
@@ -90,6 +100,21 @@ module Yodel
     end
     
     
-    # associations will go here...
+    # associations to other records
+    def html_for_belongs_to_association(model, association, id)
+      html = "<select name='#{id}' id='#{id}'>"
+      if !association.query_options[:required]
+        html << "<option value=''>None</option>"
+      end
+      association.klass.all(site_id: model.site_id).each do |record|
+        html << "<option value='#{record._id.to_s}'>#{record.name}</option>"
+      end
+      html << "</select>"
+    end
+    
+    def html_for_attachment(model, association, id)
+      "<input type='file' name='#{id}' id='#{id}'>
+       <p id='#{id}_name' class='upload_name'>#{model.send(association.name).try(:file_name)}</p>"
+    end
   end
 end

@@ -27,11 +27,11 @@ module Yodel
       [nil, nil, nil]
     end
     
-    def path_for(controller, action, options)
+    def path_and_action_for(controller, action, options)
       @routes.each do |route|
         return route.path_with_options(options) if route.controller == controller && route.action == action
       end
-      nil
+      [nil, nil]
     end
   end
   
@@ -55,7 +55,7 @@ module Yodel
       options.each do |name, value|
         path.gsub!(/\(\?\<#{name}\>.+\)/, value.to_s)
       end
-      path
+      [path, @action]
     end
   end
   

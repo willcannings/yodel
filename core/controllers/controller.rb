@@ -82,14 +82,14 @@ module Yodel
     
     
     # rendering
-    def render_file(file, content='')
+    def render_file(file)
       File.open(file, 'r') do |file|
-        render_string file.read, content
+        render_string file.read
       end
     end
     
-    def render_string(markup, content='')
-      context = RenderContext.new(self, content)
+    def render_string(markup)
+      context = RenderContext.new(self)
       Erubis::Eruby.new(markup).evaluate(context)
     end
     
@@ -100,8 +100,8 @@ module Yodel
       Yodel.routes << {controller: self, method: :any, action: :index, path: path}.merge(options)
     end
     
-    def self.path_for(action, options={})
-      Yodel.routes.path_for(self, action, options)
+    def self.path_and_action_for(action, options={})
+      Yodel.routes.path_and_action_for(self, action, options)
     end
     
     

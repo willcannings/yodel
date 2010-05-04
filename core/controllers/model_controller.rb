@@ -7,7 +7,7 @@ module Yodel
     def self.handles(model)
       @model = model
       @name = model.name.split('::')[-1].to_s.singularize.underscore
-      model.controller self
+      model.controller = self
       
       route "#{'/' + @route_prefix if @route_prefix}/#{@name.pluralize}", method: :get, action: :index
       route "#{'/' + @route_prefix if @route_prefix}/#{@name.pluralize}", method: :post, action: :create

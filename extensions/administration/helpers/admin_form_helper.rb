@@ -83,7 +83,6 @@ module Yodel
     end
     
     def id_for_name(name)
-      puts name.class.name
       name.gsub('[', '_').gsub(']', '')
     end
     

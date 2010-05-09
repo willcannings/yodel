@@ -18,6 +18,14 @@ module Yodel
     # SEO tab
     key :description, Text, tab: 'SEO'
     key :keywords, Text, tab: 'SEO'
-    key :custom_meta_tags, Text, tab: 'SEO', searchable: false    
+    key :custom_meta_tags, Text, tab: 'SEO', searchable: false
+    
+    def icon
+      '/pages_static/images/page_icon.png'
+    end
+    
+    def name
+      title
+    end
   end
 end

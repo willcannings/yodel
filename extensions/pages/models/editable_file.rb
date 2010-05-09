@@ -3,6 +3,10 @@ module Yodel
     key :name, String, required: true, index: true
     def path
     end
+    
+    def icon
+      '/pages_static/images/editable_file_icon.png'
+    end
   end
   
   class JavascriptFile < EditableFile

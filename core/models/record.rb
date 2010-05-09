@@ -20,9 +20,23 @@ module Yodel
     
     def to_json_hash
       attrs = self.attributes
+      
+      # for readability rename '_id' to 'id',
+      # and '_type' to 'type'
       attrs.delete('_id')
       attrs['id'] = self.id.to_s
-      attrs
+      type = attrs.delete('_type')
+      attrs['type'] = type
+      
+      # we don't need to store which site the record belongs to
+      attrs.delete('site_id')
+      
+      # attributes starting with an underscore are private
+      attrs.delete_if {|key, value| key.start_with? '_'}
+      
+      # change all references (values of type ObjectID)
+      # to a string of the object ID
+      attrs.each {|key, value| attrs[key] = value.to_s if value.is_a?(BSON::ObjectID)}
     end
     
     # attachment helpers

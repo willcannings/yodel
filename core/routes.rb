@@ -40,7 +40,7 @@ module Yodel
     def initialize(route)
       @method = route[:method].to_s.downcase.to_sym
       @original_path = route[:path]
-      @path = Regexp.new("^#{Regexp.quote(route[:path].chomp('/')).gsub('/', '/+')}(?<format>\\.\\w+)?(?<glob>.*)", nil, 'n') # from Rack::URLMap
+      @path = Regexp.new("^#{route[:path].chomp('/').gsub('/', '/+')}(?<format>\\.\\w+)?(?<glob>.*)", nil, 'n') # from Rack::URLMap
       @controller = route[:controller]
       @action = route[:action]
     end

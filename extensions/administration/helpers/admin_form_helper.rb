@@ -35,74 +35,89 @@ module Yodel
         html << "<li class='#{'selected' if index == 0}' id='#{model.class.name.demodulize.underscore}_#{tab_name.underscore}_content'><a href='#'>#{tab_name}</a>" << tabs[tab_name] << "</ul></li>"
       end
       
-      html << "</ul></aside><input type='submit' class='submit'><input type='button' class='cancel' value='Cancel'></form></section>"
+      # finish off the html structure, then add hidden type and ID fields
+      type_name = name_for_attribute_name(model, 'type')
+      id_name = name_for_attribute_name(model, 'id')
+      html << "</ul></aside><input type='submit' class='submit'><input type='button' class='cancel' value='Cancel'>"
+      html << "<input type='hidden' name='#{type_name}' id='#{id_for_name(type_name)}' #{"value='#{model.class.name}'" unless model.new?}>"
+      html << "<input type='hidden' name='#{id_name}' id='#{id_for_name(id_name)}' #{"value='#{model.id.to_s}'" unless model.new?}>"
+      html << "</form></section>"
     end
-    
     
     def html_for_key(model, key)
       ancestors = key.type.ancestors - [Comparable, Object, Kernel, BasicObject]
+      name = name_for_key(model, key)
+      id   = id_for_name(name)
       
       ancestors.each do |ancestor_type|
         method_name = "html_for_#{ancestor_type.name.underscore}_key_and_value"
         if self.respond_to? method_name
-          return self.send(method_name, model, key, id_for_field(model, key), model.send(key.name))
+          return self.send(method_name, model, key, name, id, model.send(key.name))
         end
       end
       
       raise "Unknown Key Type: unable to prepare html for key #{key.name} (#{key.type.name})"
     end
     
-    
     def html_for_association(model, association)
       return unless association.query_options[:display]
-      id = id_for_field(model, association)
+      name = name_for_key(model, association)
+      id   = id_for_name(name)
 
       if association.type == :belongs_to
-        return html_for_belongs_to_association(model, association, id)
+        return html_for_belongs_to_association(model, association, name, id)
       elsif association.type == :one && association.klass == Yodel::Attachment
-        return html_for_attachment(model, association, id)
+        return html_for_attachment(model, association, name, id)
       end
       
       # only belongs_to is supported for now
       raise "Unknown Association Type or Record Type: unable to prepare html for association #{association.klass.name}"
     end
     
+    def name_for_key(model, key)
+      name_for_attribute_name(model, key.name.to_s.demodulize.underscore)
+    end
     
-    def id_for_field(model, key)
-      "#{model.class.name.demodulize.underscore}[#{key.name.to_s.demodulize.underscore}]"
+    def name_for_attribute_name(model, field_name)
+      "#{model.class.name.demodulize.underscore}[#{field_name}]"
+    end
+    
+    def id_for_name(name)
+      puts name.class.name
+      name.gsub('[', '_').gsub(']', '')
     end
     
     
     
     # keys
-    def html_for_string_key_and_value(model, key, id, value)
-      "<input type='text' name='#{id}' value='#{value}' id='#{id}'>"
+    def html_for_string_key_and_value(model, key, name, id, value)
+      "<input type='text' name='#{name}' value='#{value}' id='#{id}'>"
     end
     
-    def html_for_text_key_and_value(model, key, id, value)
-      "<textarea name='#{id}' value='#{value}' id='#{id}'></textarea>"
+    def html_for_text_key_and_value(model, key, name, id, value)
+      "<textarea name='#{name}' value='#{value}' id='#{id}'></textarea>"
     end
     
-    def html_for_numeric_key_and_value(model, key, id, value)
-      "<input type='text' name='#{id}' value='#{value}' id='#{id}'>"
+    def html_for_numeric_key_and_value(model, key, name, id, value)
+      "<input type='text' name='#{name}' value='#{value}' id='#{id}'>"
     end
     
-    def html_for_boolean_key_and_value(model, key, id, value)
-      "<input type='checkbox' name='#{id}' id='#{id}'>"
+    def html_for_boolean_key_and_value(model, key, name, id, value)
+      "<input type='checkbox' name='#{name}' id='#{id}'>"
     end
     
-    def html_for_date_key_and_value(model, key, id, value)
-      "<input type='text' name='#{id}' value='#{value}' id='#{id}'>"
+    def html_for_date_key_and_value(model, key, name, id, value)
+      "<input type='text' name='#{name}' value='#{value}' id='#{id}'>"
     end
     
-    def html_for_time_key_and_value(model, key, id, value)
-      "<input type='text' name='#{id}' value='#{value}' id='#{id}'>"
+    def html_for_time_key_and_value(model, key, name, id, value)
+      "<input type='text' name='#{name}' value='#{value}' id='#{id}'>"
     end
     
     
     # associations to other records
-    def html_for_belongs_to_association(model, association, id)
-      html = "<select name='#{id}' id='#{id}'>"
+    def html_for_belongs_to_association(model, association, name, id)
+      html = "<select name='#{name}' id='#{id}'>"
       if !association.query_options[:required]
         html << "<option value=''>None</option>"
       end
@@ -112,8 +127,8 @@ module Yodel
       html << "</select>"
     end
     
-    def html_for_attachment(model, association, id)
-      "<input type='file' name='#{id}' id='#{id}'>
+    def html_for_attachment(model, association, name, id)
+      "<input type='file' name='#{name}' id='#{id}'>
        <p id='#{id}_name' class='upload_name'>#{model.send(association.name).try(:file_name)}</p>"
     end
   end

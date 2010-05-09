@@ -1,6 +1,6 @@
 module Yodel
   class AdminDesignController < AdminListController
-    handles  Yodel::Layout, Yodel::UploadFile, Yodel::EditableFile
+    handles  Yodel::UploadFile, Yodel::CSSFile, Yodel::JavascriptFile
     tab_name 'Design'
   end
 end

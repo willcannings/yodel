@@ -36,7 +36,7 @@ module Yodel
     def self.handles(*models)
       @handles = models
       models.each do |model|
-        eval "class Admin#{model.name.demodulize.camelcase}ModelController < AdminModelController
+        eval "class Yodel::Admin#{model.name.demodulize.camelcase}ModelController < Yodel::AdminModelController
                 handles #{model.name}
               end"
       end

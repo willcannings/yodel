@@ -6,14 +6,14 @@ module Yodel
     
     def self.handles(model)
       @model = model
-      @name = model.name.split('::')[-1].to_s.singularize.underscore
+      @name = model.name.demodulize.singularize.underscore
       model.controller = self
       
       route "#{'/' + @route_prefix if @route_prefix}/#{@name.pluralize}", method: :get, action: :index
       route "#{'/' + @route_prefix if @route_prefix}/#{@name.pluralize}", method: :post, action: :create
-      route "#{'/' + @route_prefix if @route_prefix}/#{@name}/(?<id>\d+)/destroy", method: :get, action: :destroy
-      route "#{'/' + @route_prefix if @route_prefix}/#{@name}/(?<id>\d+)", method: :post, action: :update
-      route "#{'/' + @route_prefix if @route_prefix}/#{@name}/(?<id>\d+)", method: :get, action: :show
+      route "#{'/' + @route_prefix if @route_prefix}/#{@name}/(?<id>[0-9a-z]+)/destroy", method: :get, action: :destroy
+      route "#{'/' + @route_prefix if @route_prefix}/#{@name}/(?<id>[0-9a-z]+)", method: :post, action: :update
+      route "#{'/' + @route_prefix if @route_prefix}/#{@name}/(?<id>[0-9a-z]+)", method: :get, action: :show
     end
     
     def self.inherited(child)
@@ -39,7 +39,7 @@ module Yodel
     def show
       record = self.class.model.find(params['id'])
       status 404 if record.nil?
-      json record: record.try(:to_json_hash)
+      json record: record.try(:to_json_hash), type: record.class.name.demodulize.underscore
     end
     
     def destroy

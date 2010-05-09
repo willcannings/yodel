@@ -84,7 +84,7 @@ module Yodel
     def matches_request?(request)
       # try format first, then fall back to accept header
       if request.params['format']
-        @extensions.include?(request.params['format'].gsub('.', ''))
+        @extensions.include?(request.params['format'])
       else
         @mime_types.each do |type|
           return true if request.env['HTTP_ACCEPT'].include?(type)

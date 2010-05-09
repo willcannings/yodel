@@ -23,6 +23,7 @@ module Yodel
       controller_constant, action, match = Yodel.routes.match_request(request)
       
       if controller_constant && (site = Site.find_by_domain(request.host))
+        request.params['format'] = request.params['format'].gsub('.', '') if request.params['format']
         controller = controller_constant.new(request, response, match, site)
         controller.run_before_filters
         controller.send(action)

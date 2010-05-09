@@ -129,7 +129,7 @@ module Yodel
       
       @responses.each do |name, data|
         mime_type = Yodel.mime_types.type(name)
-        if mime_type.try(:matches_request?, request)
+        if mime_type.try(:matches_request?, request) # FIXME: why are we using try here? document or change
           response.write mime_type.process(data)
           response['Content-Type'] = mime_type.default_mime_type
           return

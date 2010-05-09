@@ -12,8 +12,21 @@ module Yodel
     ensure_index 'site_id'
     
     def self.all_for_site(site, conditions={})
-      self.all({site_id: site.id}.merge(conditions))
+      self.all({site_id: site.id}.merge(conditions)) + self.descendents.collect {|child| child.all_for_site(site, conditions)}.flatten
     end
+    
+    def self.first_for_site(site, conditions={})
+      record = self.first({site_id: site.id}.merge(conditions))
+      children = self.descendents
+      
+      while !record && !children.empty?
+        child = children.shift
+        record = child.first({site_id: site.id}.merge(conditions))
+      end
+      
+      record
+    end
+    
     
     # when records are referred to via an association,
     # they need to be able to respond with a human

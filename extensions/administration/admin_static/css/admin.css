@@ -93,7 +93,7 @@ article {
     bottom: 30px;
   }
 
-    aside.items h1 {
+    aside.items > h1 {
       font-size: 15px;
       color: #555;
       width: 330px;
@@ -109,13 +109,13 @@ article {
       -moz-border-radius-topright: 5px;
     }
 
-    aside.items h1 a {
+    aside.items > h1 > a {
       font-size: 11px;
       color: #999;
       float: right;
     }
     
-    aside.items ol {
+    aside.items > ul {
       min-height: 100px;
       width: 350px;
       border: 1px solid #aaa;
@@ -129,11 +129,7 @@ article {
       left: 30px;
     }
     
-    aside.items ol.flat {
-      bottom: 45px;
-    }
-    
-      aside.items ol li {
+      aside.items ul li {
         font-size: 12px;
         height: 25px;
         line-height: 25px;
@@ -144,7 +140,23 @@ article {
         color: #333;
       }
       
-      aside.items ol li.selected {
+      aside.items ul li.flat {
+        height: auto;
+        border: none;
+        margin-top: 5px;
+        margin-bottom: 10px;
+      }
+      
+      aside.items ul li.flat li {
+        border: none;
+      }
+      
+      aside.items ul li.flat h1 {
+        font-weight: bold;
+        color: #555;
+      }
+      
+      aside.items ul li.selected {
         color: white;
         background-color: #53779B;
         background: -moz-linear-gradient(#53779B, #334C6B);
@@ -152,59 +164,59 @@ article {
         border-top: 1px solid #53779B;
       }
       
-        aside.items ol li img {
+        aside.items ul li img {
           float: left;
           padding-top: 4px;
           padding-right: 10px;
         }
         
-        aside.items ol li a.new_child {
+        aside.items ul li a.new_child {
           float: right;
           display: none;
         }
         
-        aside.items ol li:hover a.new_child {
+        aside.items ul li:hover a.new_child {
           display: block;
         }
         
-        aside.items ol li .delete {
+        aside.items ul li .delete {
           visibility: hidden;
           float: right;
         }
         
-        aside.items ol li:hover .delete {
+        aside.items ul li:hover .delete {
           visibility: visible;
         }
         
-        aside.items ol li a {
+        aside.items ul li a {
           color: #333;
         }
         
-        aside.items ol li.selected a {
+        aside.items ul li.selected a {
           color: white;
         }
 
-        aside.items ol li.indent_1 {
+        aside.items ul li.indent_1 {
           padding-left: 30px;
         }
         
-        aside.items ol li.indent_2 {
+        aside.items ul li.indent_2 {
           padding-left: 60px;
         }
         
-        aside.items ol li.indent_3 {
+        aside.items ul li.indent_3 {
           padding-left: 90px;
         }
         
-        aside.items ol li.indent_4 {
+        aside.items ul li.indent_4 {
           padding-left: 120px;
         }
         
-        aside.items ol li.indent_5 {
+        aside.items ul li.indent_5 {
           padding-left: 150px;
         }
         
-        aside.items ol li ol a, aside.items ol li.selected ol a {
+        aside.items ul li ul a, aside.items ul li.selected ul a {
           color: #333;
         }
       

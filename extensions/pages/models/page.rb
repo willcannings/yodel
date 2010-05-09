@@ -27,5 +27,7 @@ module Yodel
     def name
       title
     end
+    
+    # TODO: before save filter for title: parameterize
   end
 end

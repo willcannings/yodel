@@ -13,7 +13,7 @@
       <nav>
         <menu>
           <% Yodel.config.admin_tabs.each do |controller| %>
-            <li class='<%= controller == @controller.class ? 'selected' : '' %>'><a href="<%= (controller.path_and_action_for :index)[0] %>"><%= controller.tab_name %></a></li>
+            <li class='<%= controller == @controller.class ? 'selected' : '' %>'><a href="<%= controller.path_and_action_for(:index).path %>"><%= controller.tab_name %></a></li>
           <% end %>
         </menu>
       </nav>
@@ -21,8 +21,9 @@
     <article>
       <aside class="items">
         <h1><%= tab_name %></h1>
-        <ol>
-        </ol>
+        <ul>
+          <%= @content %>
+        </ul>
       </aside>
         <% controller_models.each do |model| %>
           <%= form_for_model(model.new(site: site), '', 'get') %>

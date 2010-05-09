@@ -12,8 +12,14 @@ module Yodel
       models.to_a.select {|model| model.creatable?}
     end
     
+    # FIXME: determine why this method needs to be defined here as well
     def controller_models
       self.class.controller_models
+    end
+    
+    def index
+      @content = "Hello world! trees rule dude!"
+      super
     end
   end
 end

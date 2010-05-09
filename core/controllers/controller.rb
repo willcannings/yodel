@@ -130,7 +130,7 @@ module Yodel
       @responses.each do |name, data|
         mime_type = Yodel.mime_types.type(name)
         if mime_type.try(:matches_request?, request)
-          response.write data
+          response.write mime_type.process(data)
           response['Content-Type'] = mime_type.default_mime_type
           return
         end
@@ -142,7 +142,7 @@ module Yodel
       type = @responses.keys.first
       mime_type = Yodel.mime_types.type(type)
       response['Content-Type'] = mime_type.default_mime_type
-      response.write @responses[type]
+      response.write mime_type.process(@responses[type])
     end
   end
 end

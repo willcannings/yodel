@@ -22,6 +22,9 @@ Yodel.mime_types do
   mime_type :json do
     extensions 'json'
     mime_types 'application/json'
+    transformer do |data|
+      data.to_json
+    end
   end
   
   mime_type :pdf do

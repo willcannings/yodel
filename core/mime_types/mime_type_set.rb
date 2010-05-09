@@ -24,6 +24,7 @@ module Yodel
       @name = name
       @extensions = []
       @mime_types = []
+      @transformer = nil
     end
 
     def mime_types(*types)
@@ -60,6 +61,26 @@ module Yodel
       default_mime_type(type)
     end
     
+    # TODO: separate to a transformer, a builder function
+    # may be required, e.g for PDF's:
+    # pdf do |document|
+    #   document.text "hello world"
+    # end
+    # builder creates document
+    # transformer calls document.to_pdf or something
+    
+    def transformer(&block)
+      @transformer = block
+    end
+    
+    def process(data)
+      if @transformer
+        @transformer.call(data)
+      else
+        data
+      end
+    end
+        
     def matches_request?(request)
       # try format first, then fall back to accept header
       if request.params['format']

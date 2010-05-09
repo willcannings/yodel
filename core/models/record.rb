@@ -11,6 +11,10 @@ module Yodel
     belongs_to :site, class_name: 'Yodel::Site'
     ensure_index 'site_id'
     
+    def self.all_for_site(site, conditions={})
+      self.all({site_id: site.id}.merge(conditions))
+    end
+    
     # when records are referred to via an association,
     # they need to be able to respond with a human
     # readable name. this method should be overriden.

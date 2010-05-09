@@ -6,7 +6,7 @@ module Yodel
     
     def index
       html do
-        render_file File.join(File.dirname(__FILE__), '..', 'views', 'admin.html')
+        render_file File.join(File.dirname(__FILE__), '..', 'views', 'admin.html.erb')
       end
     end
     
@@ -35,7 +35,7 @@ module Yodel
     # the models this admin controller is responsible for
     def self.handles(*models)
       @handles = models
-      models.each do |model|
+      self.controller_models.each do |model|
         eval "class Yodel::Admin#{model.name.demodulize.camelcase}ModelController < Yodel::AdminModelController
                 handles #{model.name}
               end"
@@ -43,12 +43,15 @@ module Yodel
     end
     
     def self.controller_models
-      models = Set.new
-      @handles.each do |model|
-        models << model
-        model.descendents.each {|child| models << child}
+      if !@controller_models
+        models = Set.new
+        @handles.each do |model|
+          models << model
+          model.descendents.each {|child| models << child}
+        end
+        @controller_models = models.to_a.select {|model| model.creatable?}
       end
-      models.to_a.select {|model| model.creatable?}
+      @controller_models
     end
     
     def controller_models

@@ -1,0 +1,10 @@
+<% controller_models.each do |model| %>
+  <li class="flat">
+    <h1><%= model.name.demodulize.underscore.humanize.pluralize.titleize %></h1>
+    <ul>
+      <% model.all_for_site(site).each do |record| %>
+        <li id="<%= record.id %>" class="record_row"><img src="<%= record.icon %>"><a href="#" onclick="loadRecord('<%= record.class.controller.path_and_action_for(:show, id: record.id).path %>'); return false;"><%= record.name %></a></li>
+      <% end %>
+    </ul>
+  </li>
+<% end %>

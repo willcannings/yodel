@@ -15,6 +15,7 @@ function hideAllSections() {
   currentSection = null;
 }
 
+
 /* sections side bars */
 var sidebarOpen = false;
 function toggleSidebar() {
@@ -25,6 +26,7 @@ function toggleSidebar() {
   setTimeout("currentSection.down('form').show()", 0);
   sidebarOpen = !sidebarOpen;
 }
+
 
 /* sidebar tabs */
 function selectTab(element) {
@@ -40,6 +42,39 @@ function selectTab(element) {
   element.addClassName('selected');
 }
 
+
+/* loading records */
+var LOAD_RECORD_ERROR = "An error occurred loading this record"
+function loadRecord(url) {
+  new Ajax.Request(url, {method: 'get', onSuccess: processRecord})
+}
+
+function processRecord(transport) {
+  if(transport.responseJSON && transport.responseJSON.record && transport.responseJSON.type) {
+    record = transport.responseJSON.record;
+    type = transport.responseJSON.type;
+    
+    /* show the correct form and change the submit text */
+    showSection('model_' + type);
+    currentSection.down('.submit').value = 'Save';
+    
+    /* highlight the selected record */
+    $$('.record_row').each(function(row) {
+      row.removeClassName('selected');
+    })
+    $(record.id).addClassName('selected');
+    
+    /* show the record's values in the form */
+    $H(record).each(function(pair) {
+      $(type + '_' + pair.key).value = pair.value;
+    });
+  } else {
+    alert(LOAD_RECORD_ERROR);
+  }
+}
+
+
+/* event listeners */
 document.observe("dom:loaded", function() {
   $$('section aside').each(function(sidebar) {
     sidebar.observe('click', function(event) {
@@ -62,6 +97,4 @@ document.observe("dom:loaded", function() {
       event.stop();
     });
   });
-  
-  showSection('model_page');
 });

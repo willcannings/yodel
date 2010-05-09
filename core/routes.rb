@@ -55,7 +55,7 @@ module Yodel
       options.each do |name, value|
         path.gsub!(/\(\?\<#{name}\>.+\)/, value.to_s)
       end
-      [path, @action]
+      OpenStruct.new(path: path, method: @method)
     end
   end
   

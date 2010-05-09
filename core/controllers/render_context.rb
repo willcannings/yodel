@@ -1,12 +1,16 @@
 module Yodel
   class RenderContext
-    def initialize(controller)
+    def initialize(controller, extra_context)
       controller.params.each_pair do |name, value|
         instance_variable_set variabalise_name(name), value
       end
     
       controller.instance_variables.each do |name|
         instance_variable_set name, controller.instance_variable_get(name)
+      end
+      
+      extra_context.each do |key, value|
+        instance_variable_set variabalise_name(key), value
       end
       
       @controller = controller

@@ -93,27 +93,33 @@ function processRecord(transport) {
     record = transport.responseJSON.record;
     type = transport.responseJSON.type;
     
-    /* show the correct form and change the submit text */
+    // show the correct form and change the submit text
     showSection('model_' + type);
     currentSection.down('.submit').value = 'Save';
     
-    /* reset the form action to perform an update */
+    // reset the form action to perform an update
     currentSection.down('form').action = transport.request.url;
     currentSection.down('form').method = 'POST';
     
-    /* highlight the selected record */
+    // highlight the selected record
     unselectAllRecords();
     selectRecord(record);
     
-    /* show the record's values in the form */
+    // show the record's values in the form
     $H(record).each(function(pair) {
-      if(pair.key != 'id' && pair.key != 'type') {
-        if(typeof(pair.value) == 'object') {
-          if(pair.value.file_name) {
-            $(type + '_' + pair.key + '_name').innerHTML = pair.value.file_name;
-          }
-        } else {
-          $(type + '_' + pair.key).value = pair.value;
+      element_id = type + '_' + pair.key;
+      
+      if(typeof(pair.value) == 'object' && pair.value) {
+        if(pair.value.file_name) {
+          if($(element_id + '_name'))
+            $(element_id + '_name').innerHTML = pair.value.file_name;
+        }
+      } else if(typeof(pair.value) == 'boolean') {
+        if($(element_id))
+          $(element_id).checked = pair.value;
+      } else {
+        if($(element_id)) {
+          $(element_id).value = pair.value;
         }
       }
     });

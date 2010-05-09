@@ -5,13 +5,23 @@ module Yodel
     key :index, Integer, required: true, display: false
     ensure_index 'parent_id'
     
+    # FIXME: workaround for a bug in mongo mapper
+    def initialize(attrs={}, from_database=false)
+      self.parent = nil
+      super
+    end
+    
+    def self.roots_for_site(site)
+      self.all_for_site(site, parent_id: nil, order: 'index asc')
+    end
+    
     # tree walking; performed as recursion because iterative traversal is verbose
     def all_children
       @all_children ||= children + children.inject([]) {|records, child| records + child.all_children}
     end
     
     def siblings
-      @siblings ||= Hierarchical.all parent_id: parent.id, order: 'key asc'
+      @siblings ||= Hierarchical.all parent_id: parent.try(:id), order: 'index asc'
     end
     
     def ancestors
@@ -26,20 +36,92 @@ module Yodel
     # insertion and deletion to maintin the integrity of the 'index' field
     before_destroy :remove_from_parent
     def remove_from_parent
-      self.parent.remove_child(self)
+      if root?
+        remove_from_root
+      else
+        self.parent.remove_child(self)
+      end
+    end
+    
+    before_validation_on_create :add_to_parent
+    def add_to_parent
+      if root?
+        append_to_root
+      else
+        self.parent.append_child(self)
+      end
     end
 
+    # FIXME: need to do extra checks; e.g append_to_root needs
+    # to check if parent and index are set, and if so remove the
+    # record from the existing collection
     def append_child(child)
+      append_to_siblings(children, child)
+      child.parent = self
     end
-
-    def insert_child(child)
-      # handle case where child.parent != self, and we're moving a record
+    
+    def append_to_root
+      append_to_siblings(self.class.roots_for_site(self.site), self)
+      self.parent = nil
+    end
+    
+    def append_to_siblings(siblings, record)
+      highest_index = siblings.last.try(:index) || 0
+      record.index = highest_index + 1
+    end
+    
+    def insert_child(child, index)
+      insert_in_siblings(children, child, index)
+      child.parent = self
+    end
+    
+    def insert_in_root(index)
+      insert_in_siblings(self.class.roots_for_site(self.site), self, index)
+      self.parent = nil
+    end
+    
+    def insert_in_siblings(siblings, record, index)
+      if record.index
+        record.parent.remove_child(child) if !root?
+        record.remove_from_root if root?
+      end
+      
+      siblings.each do |sibling|
+        if sibling.index >= index
+          sibling.index += 1
+          sibling.save
+        end
+      end
+      record.index = index
     end
     
     def remove_child(child)
+      remove_from_siblings(children, child)
+    end
+    
+    def remove_from_root
+      remove_from_siblings(self.class.roots_for_site(self.site), self)
+    end
+    
+    def remove_from_siblings(siblings, record)
+      siblings.each do |sibling|
+        if sibling.index > record.index
+          sibling.index -= 1
+          sibling.save
+        end
+      end
+      record.index  = nil
+      record.parent = nil
     end
     
     def move_to(new_index)
+      if root?
+        remove_from_root
+        insert_in_root(new_index)
+      else
+        self.parent.remove_child(self)
+        self.parent.insert_child(self, new_index)
+      end
     end
     
     
@@ -49,10 +131,26 @@ module Yodel
       if block_given?
         @allowed_child_types = yield
       elsif args.length >= 1
-        @allowed_child_types = args.first
+        @allowed_child_types = args
       else
-        @allowed_child_types ||= descendents
+        # conditional assignment will trigger when a value is nil. since this
+        # is an acceptable value for child types, we check if the types have
+        # been defined yet, and if so return, otherwise assign descendents of
+        # this type by default. contrast to:
+        # @allowed_child_types ||= descendents
+        # the list is ORd with an empty list so enumeration can be guaranteed
+        if defined?(@allowed_child_types)
+          @allowed_child_types || []
+        else
+          @allowed_child_types = self_and_descendents
+        end
       end
+    end
+    
+    def self.allowed_child_types_and_descendents
+      allowed_child_types.collect do |child_type|
+        [child_type, *child_type.descendents]
+      end.flatten
     end
     
     def self.default_child_type(*args, &block)

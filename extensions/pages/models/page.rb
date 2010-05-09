@@ -28,6 +28,9 @@ module Yodel
       title
     end
     
-    # TODO: before save filter for title: parameterize
+    before_validation_on_create :assign_permalink
+    def assign_permalink
+      self.permalink = self.title.parameterize('_')
+    end
   end
 end

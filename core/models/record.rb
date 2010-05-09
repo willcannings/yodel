@@ -7,6 +7,10 @@ module Yodel
     extend Yodel::Searchable
     set_collection_name 'record'
     
+    def self.self_and_descendents
+      [self] + self.descendents
+    end
+    
     # sharding can be performed on site_id's
     belongs_to :site, class_name: 'Yodel::Site'
     ensure_index 'site_id'
@@ -50,12 +54,19 @@ module Yodel
       hash.delete_if {|key, value| key.start_with? '_'}
       
       # change all references (values of type ObjectID)
-      # to a string of the object ID
-      hash.each {|key, value| hash[key] = value.to_s if value.is_a?(BSON::ObjectID)}
+      # to a string of the object ID, cleanse embedded
+      # documents, and remove "_id" from all keys
+      hash.each do |key, value|
+        hash[key] = value.to_s if value.is_a?(BSON::ObjectID)
+        hash[key] = cleanse_hash(value) if value.is_a?(Hash)
+        
+        if key.end_with?('_id')
+          hash.delete(key)
+          hash[key.gsub('_id', '')] = value
+        end
+      end
       
-      # if the record has embedded documents, cleanse
-      # the hash representing those documents as well
-      hash.each {|key, value| hash[key] = cleanse_hash(value) if value.is_a?(Hash)}
+      hash
     end
     
     def to_json_hash

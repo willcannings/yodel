@@ -1,0 +1,17 @@
+<h1>
+  <%= tab_name %>
+  <% if @roots.empty? || root_type.multiple_roots? %>
+    <a href="#" onclick="newRecord('<%= first_creatable_root_type.name.demodulize.underscore %>', '<%= first_creatable_root_type.controller.path_and_action_for(:create).path %>'); return false;"><img src="/admin_static/images/add.png"></a>
+  <% end %>
+</h1>
+<ul class="tree">
+  <% @roots.each do |root| %>
+    <%= render_file Yodel.config.yodel_root.join('extensions', 'administration', 'views', 'sub_tree.html.erb'), record: root, level: 0 %>
+  <% end %>
+</ul>
+
+<% if @selected_record %>
+  <script>
+    loadRecord('<%= @selected_record.class.controller.path_and_action_for(:show, id: @selected_record.id).path %>');
+  </script>
+<% end %>

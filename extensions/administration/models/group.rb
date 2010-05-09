@@ -4,9 +4,7 @@ module Yodel
     creatable
     key :name, String, required: true
     
-    default_child_type Yodel::User
-    allowed_child_types do
-      [Yodel::User, *Yodel::User.descendents, self, *self.descendents]
-    end
+    default_child_type  Yodel::User
+    allowed_child_types self, Yodel::User
   end
 end

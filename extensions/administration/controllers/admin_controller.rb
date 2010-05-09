@@ -40,21 +40,5 @@ module Yodel
               end"
       end
     end
-    
-    def self.controller_models
-      if !@controller_models
-        models = Set.new
-        @handles.each do |model|
-          models << model
-          model.descendents.each {|child| models << child}
-        end
-        @controller_models = models.to_a.select {|model| model.creatable?}
-      end
-      @controller_models
-    end
-    
-    def controller_models
-      self.class.controller_models
-    end
   end
 end

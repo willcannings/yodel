@@ -102,7 +102,7 @@ module Yodel
     end
     
     def html_for_boolean_key_and_value(model, key, name, id, value)
-      "<input type='checkbox' name='#{name}' id='#{id}'>"
+      "<input type='checkbox' name='#{name}' id='#{id}' #{'checked' if value}>"
     end
     
     def html_for_date_key_and_value(model, key, name, id, value)

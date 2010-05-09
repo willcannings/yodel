@@ -1,0 +1,11 @@
+<li id="<%= @record.id %>" class="record_row <%= "indent_#{@level + 1}" if @level > 0 %> <%= "selected" if @selected_record == @record %>">
+  <img src="<%= @record.icon %>">
+  <a href="#" onclick="loadRecord('<%= @record.class.controller.path_and_action_for(:show, id: @record.id).path %>'); return false;"><%= @record.name %></a>
+  <a href="#" class="delete" onclick="destroyRecord('<%= @record.name %>', '<%= @record.class.controller.path_and_action_for(:destroy, id: @record.id).path %>'); return false;"><img src="/admin_static/images/delete.png"></a>
+  
+  <ul>
+    <% @record.children.each do |record| %>
+      <%= render_file Yodel.config.yodel_root.join('extensions', 'administration', 'views', 'sub_tree.html.erb'), record: record, level: @level + 1 %>
+    <% end %>
+  </ul>
+</li>

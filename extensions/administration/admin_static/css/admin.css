@@ -113,6 +113,7 @@ article {
       font-size: 11px;
       color: #999;
       float: right;
+      margin-top: 7px;
     }
     
     aside.items > ul {
@@ -140,18 +141,18 @@ article {
         color: #333;
       }
       
-      aside.items ul li.flat {
+      aside.items ul.flat li {
         height: auto;
         border: none;
         margin-top: 5px;
         margin-bottom: 10px;
       }
       
-      aside.items ul li.flat li {
+      aside.items ul.flat li li {
         border: none;
       }
       
-      aside.items ul li.flat h1 {
+      aside.items ul.flat li h1 {
         font-weight: bold;
         color: #555;
       }
@@ -175,7 +176,7 @@ article {
           display: none;
         }
         
-        aside.items ul li.flat a.new_child {
+        aside.items ul.flat li a.new_child {
           display: block;
         }
         
@@ -189,7 +190,7 @@ article {
           margin-right: -10px;
         }
         
-        aside.items ul li ul li:hover .delete {
+        aside.items ul.tree li:hover .delete, aside.items ul.flat li ul li:hover .delete {
           visibility: visible;
         }
         

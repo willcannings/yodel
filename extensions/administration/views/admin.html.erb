@@ -20,11 +20,13 @@
     </header>
     <article>
       <aside class="items">
-        <h1><%= tab_name %></h1>
-        <ul>
-          <%= @content %>
-        </ul>
+        <%= @content %>
       </aside>
+        <select id="record_types">
+          <% controller_models.each do |model| %>
+            <option value="<%= model.name.demodulize.underscore %>"><%= model.name.demodulize.underscore.humanize.titleize %></option>
+          <% end %>
+        </select>
         <% controller_models.each do |model| %>
           <%= form_for_model(model.new(site: site), '', 'get') %>
         <% end %>

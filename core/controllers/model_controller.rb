@@ -27,6 +27,7 @@ module Yodel
       @model
     end
     
+    # TODO: determine if overriding name here (as a class method) breaks anything
     def self.name
       @name
     end
@@ -67,7 +68,40 @@ module Yodel
     
     private
       def update_record(record)
-        if record.update_attributes(params[self.class.name])
+        values = params[self.class.name]
+
+        # FIXME: this is some 3am coding.... this can surely be done a better way
+        # handle associations specially
+        self.class.model.associations.values.each do |association|
+          # attachments are handled using mass assignment
+          next if association.type == :one && association.klass.ancestors.include?(Yodel::Attachment)
+          next unless association.query_options[:display]
+          
+          # FIXME: only handling belong_to associations for now
+          if association.type == :belongs_to
+            new_value = values[association.name.to_s]
+            if new_value
+              if new_value != ''
+                record.send("#{association.name}=", Yodel::Record.find(new_value))
+              else
+                record.send("#{association.name}=", nil)
+              end
+            end
+            
+            values.delete(association.name.to_s)
+          end
+        end
+        
+        # handle booleans specially
+        self.class.model.keys.values.each do |key|
+          next unless key.type && key.type.ancestors.include?(Boolean)
+          record.send("#{key.name}=", !values[key.name.to_s].nil?)
+          values.delete(key.name.to_s)
+        end
+        
+        p values
+        # handle all other attributes using mass assignment
+        if record.update_attributes(values)
           json record: record.to_json_hash
         else
           status 400

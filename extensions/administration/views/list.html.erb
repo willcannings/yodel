@@ -1,9 +1,13 @@
 <% controller_models.each do |model| %>
   <li class="flat">
-    <h1><%= model.name.demodulize.underscore.humanize.pluralize.titleize %></h1>
+    <h1><%= model.name.demodulize.underscore.humanize.pluralize.titleize %> <a href="#" onclick="newRecord('<%= model.name.demodulize.underscore %>', '<%= model.controller.path_and_action_for(:create).path %>'); return false;" class="new_child"><img src="/admin_static/images/add.png"></a></h1>
     <ul>
       <% model.all_for_site(site).each do |record| %>
-        <li id="<%= record.id %>" class="record_row <%= "selected" if @selected_record == record %>"><img src="<%= record.icon %>"><a href="#" onclick="loadRecord('<%= record.class.controller.path_and_action_for(:show, id: record.id).path %>'); return false;"><%= record.name %></a></li>
+        <li id="<%= record.id %>" class="record_row <%= "selected" if @selected_record == record %>">
+          <img src="<%= record.icon %>">
+          <a href="#" onclick="loadRecord('<%= record.class.controller.path_and_action_for(:show, id: record.id).path %>'); return false;"><%= record.name %></a>
+          <a href="#" class="delete" onclick="destroyRecord('<%= record.name %>', '<%= record.class.controller.path_and_action_for(:destroy, id: record.id).path %>'); return false;"><img src="/admin_static/images/delete.png"></a>
+        </li>
       <% end %>
     </ul>
   </li>

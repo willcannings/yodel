@@ -175,6 +175,10 @@ article {
           display: none;
         }
         
+        aside.items ul li.flat a.new_child {
+          display: block;
+        }
+        
         aside.items ul li:hover a.new_child {
           display: block;
         }
@@ -182,9 +186,10 @@ article {
         aside.items ul li .delete {
           visibility: hidden;
           float: right;
+          margin-right: -10px;
         }
         
-        aside.items ul li:hover .delete {
+        aside.items ul li ul li:hover .delete {
           visibility: visible;
         }
         

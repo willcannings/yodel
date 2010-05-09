@@ -29,7 +29,7 @@ module Yodel
       # generate output for the entire record
       # the nil tab is the main tab
       html = "<section class='model_form #{tabs.size > 1 ? 'has_sidebar' : 'no_sidebar'}' id='model_#{model.class.name.demodulize.underscore}' style='display: none'>
-              <form method='#{method || 'get'}' action='#{url}'>" << tabs[nil] << "</ul><aside><a href='#' class='close'>X</a><ul>"
+              <form enctype='multipart/form-data'' method='#{method || 'get'}' action='#{url}'>" << tabs[nil] << "</ul><aside><a href='#' class='close'>X</a><ul>"
       
       tabs.keys.reject(&:nil?).each_with_index do |tab_name, index|
         html << "<li class='#{'selected' if index == 0}' id='#{model.class.name.demodulize.underscore}_#{tab_name.underscore}_content'><a href='#'>#{tab_name}</a>" << tabs[tab_name] << "</ul></li>"
@@ -39,8 +39,8 @@ module Yodel
       type_name = name_for_attribute_name(model, 'type')
       id_name = name_for_attribute_name(model, 'id')
       html << "</ul></aside><input type='submit' class='submit'><input type='button' class='cancel' value='Cancel'>"
-      html << "<input type='hidden' name='#{type_name}' id='#{id_for_name(type_name)}' #{"value='#{model.class.name}'" unless model.new?}>"
-      html << "<input type='hidden' name='#{id_name}' id='#{id_for_name(id_name)}' #{"value='#{model.id.to_s}'" unless model.new?}>"
+      #html << "<input type='hidden' name='#{type_name}' id='#{id_for_name(type_name)}' #{"value='#{model.class.name}'" unless model.new?}>"
+      #html << "<input type='hidden' name='#{id_name}' id='#{id_for_name(id_name)}' #{"value='#{model.id.to_s}'" unless model.new?}>"
       html << "</form></section>"
     end
     
@@ -66,7 +66,7 @@ module Yodel
 
       if association.type == :belongs_to
         return html_for_belongs_to_association(model, association, name, id)
-      elsif association.type == :one && association.klass == Yodel::Attachment
+      elsif association.type == :one && association.klass.ancestors.include?(Yodel::Attachment)
         return html_for_attachment(model, association, name, id)
       end
       

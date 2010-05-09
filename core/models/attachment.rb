@@ -19,7 +19,7 @@ module Yodel
     end
     
     def relative_directory_path
-      @relative_directory_path ||= File.join(Yodel.config.attachment_directory_name, record.site.identifier, id.to_s)
+      @relative_directory_path ||= File.join(record.site.identifier, attachment_name, id.to_s)
     end
     
     def directory_path
@@ -53,7 +53,13 @@ module Yodel
       super(file)
       
       # crop to the required sizes
-      record.associations
+      #record.associations
+    end
+  end
+  
+  class UniqueAttachment < Attachment
+    def relative_directory_path
+      @relative_directory_path ||= File.join(record.site.identifier, attachment_name)
     end
   end
 end

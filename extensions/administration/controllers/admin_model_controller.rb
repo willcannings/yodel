@@ -32,7 +32,7 @@ module Yodel
     private
       def redirect_to_admin_controller
         # FIXME: dirty dirty hack
-        session['selected'] = @record.id
+        session['selected'] = @record.id unless @record.nil?
         response.redirect self.class.admin_controller.path_and_action_for(:index).path
       end
   end

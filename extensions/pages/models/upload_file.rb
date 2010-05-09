@@ -1,8 +1,11 @@
 module Yodel
   class UploadFile < Record
     creatable
-    key :name, String, required: true, index: true
-    attachment :upload
+    unique_attachment :upload
+    
+    def name
+      self.upload.file_name
+    end
     
     def icon
       '/pages_static/images/upload_file_icon.png'

@@ -22,25 +22,31 @@ module Yodel
       self._id.to_s
     end
     
-    def to_json_hash
-      attrs = self.attributes
-      
+    def cleanse_hash(hash)
       # for readability rename '_id' to 'id',
       # and '_type' to 'type'
-      attrs.delete('_id')
-      attrs['id'] = self.id.to_s
-      type = attrs.delete('_type')
-      attrs['type'] = type
+      id = hash.delete('_id')
+      hash['id'] = id.to_s
+      type = hash.delete('_type')
+      hash['type'] = type
       
       # we don't need to store which site the record belongs to
-      attrs.delete('site_id')
+      hash.delete('site_id')
       
       # attributes starting with an underscore are private
-      attrs.delete_if {|key, value| key.start_with? '_'}
+      hash.delete_if {|key, value| key.start_with? '_'}
       
       # change all references (values of type ObjectID)
       # to a string of the object ID
-      attrs.each {|key, value| attrs[key] = value.to_s if value.is_a?(BSON::ObjectID)}
+      hash.each {|key, value| hash[key] = value.to_s if value.is_a?(BSON::ObjectID)}
+      
+      # if the record has embedded documents, cleanse
+      # the hash representing those documents as well
+      hash.each {|key, value| hash[key] = cleanse_hash(value) if value.is_a?(Hash)}
+    end
+    
+    def to_json_hash
+      cleanse_hash(self.attributes)
     end
     
     # attachment helpers
@@ -49,10 +55,16 @@ module Yodel
       define_attachment_setter(name)
     end
     
+    def self.unique_attachment(name)
+      class_eval "has_one :#{name}, class: Yodel::UniqueAttachment, dependent: :destroy, display: true"
+      define_attachment_setter(name)
+    end
+    
     def self.image(name, sizes={})
       class_eval "has_one :#{name}, class: Yodel::ImageAttachment, dependent: :destroy, display: true, sizes: #{sizes.inspect}"
       define_attachment_setter(name)
     end
+    
     
     # record classes can have an associated controller
     def self.controller=(controller)
@@ -72,8 +84,12 @@ module Yodel
       def self.define_attachment_setter(name)
         class_eval "
           def #{name}=(file)
-            #{name}.build(attachment_name: '#{name}') if #{name}.nil?
-            #{name}.set_file(file)
+            if file[:tempfile]
+              #{name}.build(attachment_name: '#{name}') if #{name}.nil?
+              #{name}.set_file(file)
+            else
+              #{name}.replace(file)
+            end
           end
         "
       end

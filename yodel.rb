@@ -25,7 +25,6 @@ MongoMapper.database = Yodel.config.database || "Yodel"
 # assign default values if needed
 Yodel.config.session_secret             ||= "yodel.session"
 Yodel.config.public_directory_name      ||= "public"
-Yodel.config.attachment_directory_name  ||= "attachments"
 
 # determine root directories
 Yodel.config.yodel_root = Pathname.new(File.dirname(__FILE__))
@@ -33,6 +32,7 @@ Yodel.config.root = Yodel.config.yodel_root.join('..')
 Yodel.config.public_directory = Yodel.config.root.join(Yodel.config.public_directory_name)
 
 # initialise Yodel
+require File.join(File.dirname(__FILE__), 'core', 'flash')
 require File.join(File.dirname(__FILE__), 'core', 'mime_types')
 require File.join(File.dirname(__FILE__), 'core', 'routes')
 require File.join(File.dirname(__FILE__), 'core', 'controllers')
@@ -42,7 +42,7 @@ require File.join(File.dirname(__FILE__), 'core', 'extensions')
 
 # by default, attachments are served from the public folder in the root of the app
 Yodel.use_middleware do |app|
-  app.use Rack::Static, :urls => ["/static"], :root => Yodel.config.public_directory
+  app.use Rack::Static, :urls => ["/#{Yodel.config.public_directory_name}"], :root => Yodel.config.root
 end
 
 # load yodel and app extensions

@@ -58,10 +58,27 @@ function unselectAllRecords() {
 
 /* creating records */
 function newRecord(type, url) {
+  unselectAllRecords();
   showSection('model_' + type);
   currentSection.down('.submit').value = 'Create';
-  currentSection.down('form').action = url;
-  currentSection.down('form').method = 'POST';
+  form = currentSection.down('form');
+  
+  form.action = url;
+  form.method = 'POST';
+  form.getElements().each(function(element) {
+    if(element.type != 'button' && element.type != 'submit')
+      element.value = '';
+  });
+  form.select('.upload_name').each(function(nametag) {
+    nametag.innerHTML = '';
+  });
+}
+
+
+/* destroying records */
+function destroyRecord(name, url) {
+  if(confirm("Are you sure you want to delete " + name + "?"))
+    window.location = url;
 }
 
 
@@ -90,7 +107,15 @@ function processRecord(transport) {
     
     /* show the record's values in the form */
     $H(record).each(function(pair) {
-      $(type + '_' + pair.key).value = pair.value;
+      if(pair.key != 'id' && pair.key != 'type') {
+        if(typeof(pair.value) == 'object') {
+          if(pair.value.file_name) {
+            $(type + '_' + pair.key + '_name').innerHTML = pair.value.file_name;
+          }
+        } else {
+          $(type + '_' + pair.key).value = pair.value;
+        }
+      }
     });
   } else {
     alert(LOAD_RECORD_ERROR);
@@ -133,4 +158,12 @@ document.observe("dom:loaded", function() {
       event.stop();
     })
   });
+  
+  // clicking a 'plus' or add button
+  $$('.new_child').each(function(link) {
+    link.observe('click', function(event) {
+      
+      event.stop();
+    })
+  })
 });

@@ -23,20 +23,19 @@ module Yodel
       self.class.tab_name
     end
     
-    
-    # FIXME: need better way of excluding these special subclasses...
     def self.inherited(child)
       super(child)
       child.instance_variable_set('@handles', @handles)
+      # FIXME: need better way of excluding these special subclasses...
       Yodel.config.admin_tabs << child unless child.name == 'Yodel::AdminListController' || child.name == 'Yodel::AdminTreeController'
     end
-    
     
     # the models this admin controller is responsible for
     def self.handles(*models)
       @handles = models
       self.controller_models.each do |model|
         eval "class Yodel::Admin#{model.name.demodulize.camelcase}ModelController < Yodel::AdminModelController
+                admin_controller #{self.name}
                 handles #{model.name}
               end"
       end

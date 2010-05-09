@@ -11,7 +11,8 @@ function hideAllSections() {
   if(!currentSection)
     return;
   currentSection.hide();
-  hideSidebar();
+  if(sidebarOpen)
+    toggleSidebar();
   currentSection = null;
 }
 
@@ -43,6 +44,27 @@ function selectTab(element) {
 }
 
 
+/* selecting and unselecting record */
+function selectRecord(record) {
+  $(record.id).addClassName('selected');
+}
+
+function unselectAllRecords() {
+  $$('.record_row').each(function(row) {
+    row.removeClassName('selected');
+  })
+}
+
+
+/* creating records */
+function newRecord(type, url) {
+  showSection('model_' + type);
+  currentSection.down('.submit').value = 'Create';
+  currentSection.down('form').action = url;
+  currentSection.down('form').method = 'POST';
+}
+
+
 /* loading records */
 var LOAD_RECORD_ERROR = "An error occurred loading this record"
 function loadRecord(url) {
@@ -58,11 +80,13 @@ function processRecord(transport) {
     showSection('model_' + type);
     currentSection.down('.submit').value = 'Save';
     
+    /* reset the form action to perform an update */
+    currentSection.down('form').action = transport.request.url;
+    currentSection.down('form').method = 'POST';
+    
     /* highlight the selected record */
-    $$('.record_row').each(function(row) {
-      row.removeClassName('selected');
-    })
-    $(record.id).addClassName('selected');
+    unselectAllRecords();
+    selectRecord(record);
     
     /* show the record's values in the form */
     $H(record).each(function(pair) {
@@ -76,6 +100,7 @@ function processRecord(transport) {
 
 /* event listeners */
 document.observe("dom:loaded", function() {
+  // opening a side bar
   $$('section aside').each(function(sidebar) {
     sidebar.observe('click', function(event) {
       if(sidebarOpen)
@@ -84,6 +109,7 @@ document.observe("dom:loaded", function() {
     });
   });
   
+  // closing the sidebar
   $$('section aside .close').each(function(closebox) {
     closebox.observe('click', function(event) {
       toggleSidebar();
@@ -91,10 +117,20 @@ document.observe("dom:loaded", function() {
     });
   });
   
+  // switching between side bar tabs
   $$('section aside ul li a').each(function(tab) {
     tab.observe('click', function(event) {
       selectTab(Event.element(event).up('li'));
       event.stop();
     });
+  });
+  
+  // clicking the cancel button
+  $$('.cancel').each(function(button) {
+    button.observe('click', function(event) {
+      hideAllSections();
+      unselectAllRecords();
+      event.stop();
+    })
   });
 });

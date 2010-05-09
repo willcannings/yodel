@@ -36,7 +36,7 @@ module Yodel
     end
     
     def session
-      @env['rack.session']
+      @env['rack.session'] ||= {}
     end
     
     

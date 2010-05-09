@@ -32,36 +32,37 @@ module Yodel
     end
     
     def index
-      records = self.class.model.all(site_id: site.id).collect(&:to_json_hash)
-      json records: records
+      @records = self.class.model.all(site_id: site.id).collect(&:to_json_hash)
+      json records: @records
     end
     
     def show
-      record = self.class.model.find(params['id'])
-      status 404 if record.nil?
-      json record: record.try(:to_json_hash), type: record.class.name.demodulize.underscore
+      @record = self.class.model.find(params['id'])
+      status 404 if @record.nil?
+      json record: @record.try(:to_json_hash), type: @record.class.name.demodulize.underscore
     end
     
     def destroy
-      record = self.class.model.find(params['id'])
+      @record = self.class.model.find(params['id'])
       
-      if record.nil?
-        status 404 if record.nil?
+      if @record.nil?
+        status 404
+        json success: false
       else
-        record.destroy
+        @record.destroy
         json success: true
       end
     end
     
     def create
-      record = self.class.model.new
-      record.site = site
-      update_record(record)
+      @record = self.class.model.new
+      @record.site = site
+      update_record(@record)
     end
     
     def update
-      record = self.class.model.find(params['id'])
-      update_record(record)
+      @record = self.class.model.find(params['id'])
+      update_record(@record)
     end
     
     private

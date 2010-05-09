@@ -61,5 +61,9 @@ module Yodel
     def relative_directory_path
       @relative_directory_path ||= File.join(record.site.identifier, attachment_name)
     end
+    
+    def remove_files
+      FileUtils.rm path
+    end
   end
 end

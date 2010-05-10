@@ -11,11 +11,11 @@ module Yodel
     key :permalink, String, display: false, required: true, unique: true, index: true, searchable: false
     key :title, String, required: true
     key :content, HTML
-    image :logo, thumb: '290x175'
+    key :published, Time, default: lambda { Time.now }
     
     # behaviour tab
-    key :show_in_menus, Boolean, tab: 'Behaviour'
-    key :show_in_search, Boolean, tab: 'Behaviour'
+    key :show_in_menus, Boolean, tab: 'Behaviour', default: true
+    key :show_in_search, Boolean, tab: 'Behaviour', default: true
     belongs_to :layout, class: Yodel::Layout, display: true, required: false, tab: 'Behaviour'
     
     # SEO tab

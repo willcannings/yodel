@@ -39,13 +39,17 @@ module Yodel
       self._id.to_s
     end
     
-    def cleanse_hash(hash)
+    def self.cleanse_hash(hash)
       # for readability rename '_id' to 'id',
       # and '_type' to 'type'
-      id = hash.delete('_id')
-      hash['id'] = id.to_s
-      type = hash.delete('_type')
-      hash['type'] = type
+      if hash.has_key?('_id')
+        id = hash.delete('_id')
+        hash['id'] = id.to_s
+      end
+      if hash.has_key?('_type')
+        type = hash.delete('_type')
+        hash['type'] = type
+      end
       
       # we don't need to store which site the record belongs to
       hash.delete('site_id')
@@ -91,7 +95,25 @@ module Yodel
     end
     
     def to_json_hash
-      cleanse_hash(self.attributes)
+      self.class.cleanse_hash(attributes)
+    end
+    
+    def self.default_values
+      {}.tap do |values|
+        keys.each_value do |key|
+          next unless !key.default_value.nil?
+          values[key.name] =
+            if key.default_value.respond_to?(:call)
+              key.default_value.call
+            else
+              key.default_value
+            end
+        end
+      end
+    end
+    
+    def self.default_values_to_json_hash
+      cleanse_hash(default_values)
     end
     
     # attachment helpers

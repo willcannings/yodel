@@ -28,6 +28,9 @@
       </aside>
       <% controller_models.each do |model| %>
         <%= form_for_model(model.new(site: site), '', 'get') %>
+        <script>
+          defaultRecords['<%= model.name.demodulize.underscore %>'] = <%= model.default_values_to_json_hash.to_json %>;
+        </script>
       <% end %>
     </article>
   </body>

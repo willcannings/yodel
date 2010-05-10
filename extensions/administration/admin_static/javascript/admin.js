@@ -1,6 +1,9 @@
 /* Calendar popup setup */
 Calendar.prototype.dateFormat = "%d %b %Y";
 
+/* record types can have a 'default' record indicating the default set of values a new record should have */
+var defaultRecords = {};
+
 /* showing and hiding sections */
 var currentSection = null;
 function showSection(section) {
@@ -83,6 +86,8 @@ function newRecord(type, url, parent) {
   form.action = url;
   form.method = 'POST';
   resetFormValues(form);
+  if(defaultRecords[type])
+    loadRecordObject(defaultRecords[type], type);
   
   // set the parent if applicable
   parent_id_element = form.down('.parent_id');
@@ -91,8 +96,7 @@ function newRecord(type, url, parent) {
       parent_id_element.value = parent;
     else
       parent_id_element.value = null;
-  }
-    
+  }    
 }
 
 
@@ -129,23 +133,7 @@ function processRecord(transport) {
     resetFormValues(form);
     
     // show the record's values in the form
-    $H(record).each(function(pair) {
-      element_id = type + '_' + pair.key;
-      
-      if(typeof(pair.value) == 'object' && pair.value) {
-        if(pair.value.file_name) {
-          if($(element_id + '_name'))
-            $(element_id + '_name').innerHTML = pair.value.file_name;
-        }
-      } else if(typeof(pair.value) == 'boolean') {
-        if($(element_id))
-          $(element_id).checked = pair.value;
-      } else {
-        if($(element_id)) {
-          $(element_id).value = pair.value;
-        }
-      }
-    });
+    loadRecordObject(record, type)
     
     // sync any html fields
     form.select('.html_field').each(function(field) {
@@ -154,6 +142,26 @@ function processRecord(transport) {
   } else {
     alert(LOAD_RECORD_ERROR);
   }
+}
+
+function loadRecordObject(record, type) {
+  $H(record).each(function(pair) {
+    element_id = type + '_' + pair.key;
+    
+    if(typeof(pair.value) == 'object' && pair.value) {
+      if(pair.value.file_name) {
+        if($(element_id + '_name'))
+          $(element_id + '_name').innerHTML = pair.value.file_name;
+      }
+    } else if(typeof(pair.value) == 'boolean') {
+      if($(element_id))
+        $(element_id).checked = pair.value;
+    } else {
+      if($(element_id)) {
+        $(element_id).value = pair.value;
+      }
+    }
+  });
 }
 
 

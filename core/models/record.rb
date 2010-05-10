@@ -81,8 +81,8 @@ module Yodel
             # FIXME: this is just horrible.... only done to make the admin interface easy
             hash.delete(key)
             hash[key + '_date'] = value.strftime("%d %b %Y")
-            hash[key + '_hour'] = value.strftime("%H")
-            hash[key + '_min']  = value.strftime("%M")
+            hash[key + '_hour'] = value.localtime.hour
+            hash[key + '_min']  = value.localtime.min
           end
         end
       end

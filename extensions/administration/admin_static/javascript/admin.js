@@ -66,6 +66,9 @@ function resetFormValues(form) {
   form.select('.upload_name').each(function(nametag) {
     nametag.innerHTML = '';
   });
+  form.select('select').each(function(menu) {
+    menu.selectedIndex = -1;
+  });
 }
 
 

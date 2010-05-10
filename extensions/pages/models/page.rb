@@ -11,7 +11,7 @@ module Yodel
     key :permalink, String, display: false, required: true, unique: true, index: true, searchable: false
     key :title, String, required: true
     key :content, HTML
-    key :published, Date
+    key :published, Time
     
     # behaviour tab
     key :show_in_menus, Boolean, tab: 'Behaviour'

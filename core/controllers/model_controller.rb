@@ -100,6 +100,21 @@ module Yodel
           record.send("#{key.name}=", !values[key.name.to_s].nil?)
           values.delete(key.name.to_s)
         end
+        
+        # handle times specially; dates are ok to be set by mass assignment
+        self.class.model.keys.values.each do |key|
+          next unless key.type && key.type.ancestors.include?(Time)
+          date_key = key.name.to_s + '_date'
+          hour_key = key.name.to_s + '_hour'
+          min_key = key.name.to_s + '_min'
+          
+          time = "#{values[date_key]} #{"%.2u" % values[hour_key].to_i}:#{"%.2u" % values[min_key].to_i}"
+          record.send("#{key.name}=", time)
+          
+          values.delete(date_key)
+          values.delete(hour_key)
+          values.delete(min_key)
+        end
 
         # handle all other attributes using mass assignment
         if record.update_attributes(values)

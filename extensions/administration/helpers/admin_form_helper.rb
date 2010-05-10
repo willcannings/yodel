@@ -121,7 +121,27 @@ module Yodel
     end
     
     def html_for_time_key_and_value(model, key, name, id, value)
-      "<input type='text' name='#{name}' value='#{value}' id='#{id}'>"
+      # munge the name to insert _date, _hour and _minute appropriately
+      date_name = "#{name[0..-2]}_date]"
+      hour_name = "#{name[0..-2]}_hour]"
+      min_name  = "#{name[0..-2]}_min]"
+      
+      "<img src='/admin_static/images/calendar.png' id='#{id}_trigger' class='calendar_trigger'>
+      <input type='text' name='#{date_name}' value='#{value}' id='#{id}_date' class='date' readonly='readonly'>
+      Hour: <select id='#{id}_hour' name='#{hour_name}' class='time_hour'>
+        #{(0..23).collect {|hour| "<option>#{hour}</option>"}.join('\n')}
+      </select>
+      Minute: <select id='#{id}_min' name='#{min_name}' class='time_minute'>
+        #{(0..59).collect {|hour| "<option>#{hour}</option>"}.join('\n')}
+      </select>
+      <script>
+        Calendar.setup(
+          {
+            dateField: '#{id}',
+            triggerElement: '#{id}_trigger'
+          }
+        )
+      </script>"
     end
     
     

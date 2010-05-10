@@ -339,6 +339,21 @@ article {
       margin-right: 15px;
     }
     
+    section .calendar_trigger {
+      line-height: 25px;
+      vertical-align: middle;
+    }
+    
+    section input.date {
+      border: none;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      background: none;
+      width: auto;
+      display: inline;
+      line-height: 25px;
+    }
+    
     section select {
       margin-left: 15px;
     }

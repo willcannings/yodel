@@ -70,6 +70,9 @@ module Yodel
         values = params[self.class.name]
         
         # FIXME: this is some 3am coding.... this can surely be done a better way
+        # FIXME: there is... reverse the direction; key types and associations pull
+        # data from the form, not the other way around
+
         # handle associations specially
         self.class.model.associations.values.each do |association|
           # attachments are handled using mass assignment
@@ -97,7 +100,7 @@ module Yodel
           record.send("#{key.name}=", !values[key.name.to_s].nil?)
           values.delete(key.name.to_s)
         end
-        
+
         # handle all other attributes using mass assignment
         if record.update_attributes(values)
           json record: record.to_json_hash

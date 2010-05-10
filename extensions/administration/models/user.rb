@@ -3,7 +3,7 @@ module Yodel
     cannot_be_root
     creatable
     key :username, String, required: true, index: true
-    key :password, Password, required: true
+    key :password, Password, required: true, searchable: false
     
     default_child_type  nil
     allowed_child_types nil

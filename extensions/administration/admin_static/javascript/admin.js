@@ -1,3 +1,6 @@
+/* Calendar popup setup */
+Calendar.prototype.dateFormat = "%d %b %Y";
+
 /* showing and hiding sections */
 var currentSection = null;
 function showSection(section) {

@@ -55,7 +55,9 @@ module Yodel
       
       # change all references (values of type ObjectID)
       # to a string of the object ID, cleanse embedded
-      # documents, and remove "_id" from all keys
+      # documents, remove "_id" from all keys, and change
+      # date and time values in to a format suitable for
+      # clients to read appropriately
       hash.each do |key, value|
         hash[key] = value.to_s if value.is_a?(BSON::ObjectID)
         hash[key] = cleanse_hash(value) if value.is_a?(Hash)
@@ -63,6 +65,25 @@ module Yodel
         if key.end_with?('_id')
           hash.delete(key)
           hash[key.gsub('_id', '')] = value
+        end
+        
+        # hack to get around mongo mapper mapping all dates to time objects...
+        if value.is_a?(Time) || value.is_a?(Date)
+          if self.keys.has_key?(key)
+            type = self.keys[key].type
+          else
+            type = value.class
+          end
+        
+          if type.ancestors.include?(Date)
+            hash[key] = value.strftime("%d %b %Y")
+          elsif type.ancestors.include?(Time)
+            # FIXME: this is just horrible.... only done to make the admin interface easy
+            hash.delete(key)
+            hash[key + '_date'] = value.strftime("%d %b %Y")
+            hash[key + '_hour'] = value.strftime("%H")
+            hash[key + '_min']  = value.strftime("%M")
+          end
         end
       end
       

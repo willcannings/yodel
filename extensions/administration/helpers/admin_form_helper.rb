@@ -108,7 +108,16 @@ module Yodel
     end
     
     def html_for_date_key_and_value(model, key, name, id, value)
-      "<input type='text' name='#{name}' value='#{value}' id='#{id}'>"
+      "<img src='/admin_static/images/calendar.png' id='#{id}_trigger' class='calendar_trigger'>
+      <input type='text' name='#{name}' value='#{value}' id='#{id}' class='date' readonly='readonly'>
+      <script>
+        Calendar.setup(
+          {
+            dateField: '#{id}',
+            triggerElement: '#{id}_trigger'
+          }
+        )
+      </script>"
     end
     
     def html_for_time_key_and_value(model, key, name, id, value)

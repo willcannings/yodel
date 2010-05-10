@@ -23,7 +23,12 @@ module Yodel
     end
     
     def root?
-      self.parent_id.nil?
+      if defined?(self.parent_id)
+        self.parent.nil?
+      else
+        self.parent = nil
+        true
+      end
     end
     
     

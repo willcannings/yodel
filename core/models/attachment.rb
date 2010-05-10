@@ -19,7 +19,7 @@ module Yodel
     end
     
     def relative_directory_path
-      @relative_directory_path ||= File.join(record.site.identifier, attachment_name, id.to_s)
+      @relative_directory_path ||= File.join(record.site.identifier, Yodel.config.attachment_directory_name, attachment_name, id.to_s)
     end
     
     def directory_path
@@ -59,7 +59,7 @@ module Yodel
   
   class UniqueAttachment < Attachment
     def relative_directory_path
-      @relative_directory_path ||= File.join(record.site.identifier, attachment_name)
+      @relative_directory_path ||= File.join(record.site.identifier)
     end
     
     def remove_files

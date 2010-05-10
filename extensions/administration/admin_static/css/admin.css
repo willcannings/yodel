@@ -141,7 +141,7 @@ article {
         color: #333;
       }
       
-      aside.items ul.flat li {
+      aside.items ul.flat > li {
         height: auto;
         padding-top: 5px;
         padding-bottom: 5px;

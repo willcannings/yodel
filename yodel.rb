@@ -25,6 +25,7 @@ MongoMapper.database = Yodel.config.database || "Yodel"
 # assign default values if needed
 Yodel.config.session_secret             ||= "yodel.session"
 Yodel.config.public_directory_name      ||= "public"
+Yodel.config.attachment_directory_name  ||= "attachments"
 
 # determine root directories
 Yodel.config.yodel_root = Pathname.new(File.dirname(__FILE__))

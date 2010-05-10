@@ -146,6 +146,11 @@ function processRecord(transport) {
         }
       }
     });
+    
+    // sync any html fields
+    form.select('.html_field').each(function(field) {
+      eval(field.id + '_editor.pull()');
+    });
   } else {
     alert(LOAD_RECORD_ERROR);
   }
@@ -196,5 +201,14 @@ document.observe("dom:loaded", function() {
       newRecord(this.value, this.options[this.selectedIndex].readAttribute('href'), this.up('.record_row').id);
       this.selectedIndex = -1;
     });
+  });
+  
+  // before a form is submitted, pull changes from html fields back to the underlying textarea
+  $$('form').each(function(form) {
+    form.observe('submit', function(event) {
+      this.select('.html_field').each(function(field) {
+        eval(field.id + '_editor.post()');
+      });
+    })
   })
 });

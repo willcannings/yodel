@@ -143,9 +143,8 @@ article {
       
       aside.items ul.flat li {
         height: auto;
-        border: none;
-        margin-top: 5px;
-        margin-bottom: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
       }
       
       aside.items ul.flat li li {

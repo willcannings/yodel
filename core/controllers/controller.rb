@@ -50,28 +50,40 @@ module Yodel
       @after_filters ||= []
     end
     
-    def self.before_filter(method)
-      before_filters << method
+    def self.before_filter(method, options={})
+      before_filters << [method, options]
     end
     
-    def self.after_filter(method)
-      after_filters << method
+    def self.after_filter(method, options={})
+      after_filters << [method, options]
     end
     
-    def self.run_before_filters(context)
-      before_filters.each {|method| context.send(method)}
+    def self.run_before_filters(context, action)
+      before_filters.each do |method, options|
+        if !options.empty?
+          next if options[:only] && ![*options[:only]].include?(action)
+          next if options[:except] && [*options[:except]].include?(action)
+        end
+        context.send(method)
+      end
     end
     
-    def run_before_filters
-      self.class.run_before_filters(self)
+    def run_before_filters(action)
+      self.class.run_before_filters(self, action)
     end
     
-    def self.run_after_filters(context)
-      after_filters.each {|method| context.send(method)}
+    def self.run_after_filters(context, action)
+      after_filters.each do |method, options|
+        if !options.empty?
+          next if options[:only] && ![*options[:only]].include?(action)
+          next if options[:except] && [*options[:except]].include?(action)
+        end
+        context.send(method)
+      end
     end
     
-    def run_after_filters
-      self.class.run_after_filters(self)
+    def run_after_filters(action)
+      self.class.run_after_filters(self, action)
     end
     
     def self.inherited(child)

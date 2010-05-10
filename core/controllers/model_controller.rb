@@ -50,6 +50,7 @@ module Yodel
         json success: false
       else
         @record.destroy
+        @record = nil
         json success: true
       end
     end

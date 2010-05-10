@@ -25,9 +25,9 @@ module Yodel
       if controller_constant && (site = Site.find_by_domain(request.host))
         request.params['format'] = request.params['format'].gsub('.', '') if request.params['format']
         controller = controller_constant.new(request, response, match, site)
-        controller.run_before_filters
+        controller.run_before_filters(action)
         controller.send(action)
-        controller.run_after_filters
+        controller.run_after_filters(action)
         response.finish
       else
         [404, {"Content-Type" => "text/plain"}, ["URL Not Found: #{request.path}"]]

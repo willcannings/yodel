@@ -2,6 +2,8 @@ module Yodel
   class AdminModelController < ModelController
     include Yodel::AdminControllerHelper
     before_filter :admin_required
+    after_filter  :assign_errors_to_session
+    after_filter  :redirect_to_admin_controller, except: [:index, :show]
     route_prefix  'admin_records'
     
     def self.inherited(child)
@@ -13,27 +15,16 @@ module Yodel
       @admin_controller ||= controller
     end
     
-    def create
-      super
-      redirect_to_admin_controller
-    end
-    
-    def update
-      super
-      redirect_to_admin_controller
-    end
-    
-    def destroy
-      super
-      @record = nil
-      redirect_to_admin_controller
-    end
-    
     private
+      def assign_errors_to_session
+        return if @record.nil? || @record.errors.nil?
+        session['errors'] = @record.errors.errors
+      end
+      
       def redirect_to_admin_controller
-        # FIXME: dirty dirty hack
+        # FIXME: dirty dirty hack; we really need to do more client side JS than this
         session['selected'] = @record.id unless @record.nil?
         response.redirect self.class.admin_controller.path_and_action_for(:index).path
-      end
+      end      
   end
 end

@@ -87,7 +87,7 @@ function newRecord(type, url, parent) {
   form.method = 'POST';
   resetFormValues(form);
   if(defaultRecords[type])
-    loadRecordObject(defaultRecords[type], type);
+    loadRecordObject(defaultRecords[type], type, form);
   
   // set the parent if applicable
   parent_id_element = form.down('.parent_id');
@@ -133,18 +133,13 @@ function processRecord(transport) {
     resetFormValues(form);
     
     // show the record's values in the form
-    loadRecordObject(record, type)
-    
-    // sync any html fields
-    form.select('.html_field').each(function(field) {
-      eval(field.id + '_editor.pull()');
-    });
+    loadRecordObject(record, type, form);
   } else {
     alert(LOAD_RECORD_ERROR);
   }
 }
 
-function loadRecordObject(record, type) {
+function loadRecordObject(record, type, form) {
   $H(record).each(function(pair) {
     element_id = type + '_' + pair.key;
     
@@ -161,6 +156,10 @@ function loadRecordObject(record, type) {
         $(element_id).value = pair.value;
       }
     }
+  });
+  
+  form.select('.html_field').each(function(field) {
+    eval(field.id + '_editor.pull()');
   });
 }
 

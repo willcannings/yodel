@@ -33,5 +33,12 @@
         </script>
       <% end %>
     </article>
+    
+    <% if session['errors'] %>
+      <script>
+        alert("An error occurred creating this record:\n\n<%= session['errors'].collect {|key, errors| "#{key.to_s.humanize.titleize}: #{errors.join(' and ')}"}.join('\n') %>");
+      </script>
+      <% session.delete('errors') %>
+    <% end %>
   </body>
 </html>

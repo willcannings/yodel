@@ -99,6 +99,10 @@ module Yodel
       "<input type='text' name='#{name}' value='#{value}' id='#{id}'>"
     end
     
+    def html_for_password_key_and_value(model, key, name, id, value)
+      "<input type='password' name='#{name}' value='#{value}' id='#{id}'>"
+    end
+    
     def html_for_boolean_key_and_value(model, key, name, id, value)
       "<input type='checkbox' name='#{name}' id='#{id}' #{'checked' if value}>"
     end

@@ -55,6 +55,16 @@ function unselectAllRecords() {
   })
 }
 
+function resetFormValues(form) {
+  form.getElements().each(function(element) {
+    if(element.type != 'button' && element.type != 'submit')
+      element.value = '';
+  });
+  form.select('.upload_name').each(function(nametag) {
+    nametag.innerHTML = '';
+  });
+}
+
 
 /* creating records */
 function newRecord(type, url, parent) {
@@ -66,13 +76,7 @@ function newRecord(type, url, parent) {
   // reset the url, method and form values
   form.action = url;
   form.method = 'POST';
-  form.getElements().each(function(element) {
-    if(element.type != 'button' && element.type != 'submit')
-      element.value = '';
-  });
-  form.select('.upload_name').each(function(nametag) {
-    nametag.innerHTML = '';
-  });
+  resetFormValues(form);
   
   // set the parent if applicable
   parent_id_element = form.down('.parent_id');
@@ -109,12 +113,14 @@ function processRecord(transport) {
     currentSection.down('.submit').value = 'Save';
     
     // reset the form action to perform an update
-    currentSection.down('form').action = transport.request.url;
-    currentSection.down('form').method = 'POST';
+    form = currentSection.down('form');
+    form.action = transport.request.url;
+    form.method = 'POST';
     
     // highlight the selected record
     unselectAllRecords();
     selectRecord(record);
+    resetFormValues(form);
     
     // show the record's values in the form
     $H(record).each(function(pair) {
@@ -172,15 +178,17 @@ document.observe("dom:loaded", function() {
     button.observe('click', function(event) {
       hideAllSections();
       unselectAllRecords();
+      resetFormValues(this.up('form'));
       event.stop();
     })
   });
   
-  // clicking a 'plus' or add button
-  $$('.new_child').each(function(link) {
-    link.observe('click', function(event) {
-      
-      event.stop();
-    })
+  // adding a child record by selecting the record type from a drop down menu
+  $$('.record_types').each(function(menu) {
+    menu.selectedIndex = -1;
+    menu.observe('change', function(event) {
+      newRecord(this.value, this.options[this.selectedIndex].readAttribute('href'), this.up('.record_row').id);
+      this.selectedIndex = -1;
+    });
   })
 });

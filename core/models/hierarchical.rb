@@ -124,8 +124,10 @@ module Yodel
     def self.allowed_child_types(*args, &block)
       if block_given?
         @allowed_child_types = yield
-      elsif args.length >= 1
+      elsif args.length >= 1 && !args.first.nil?
         @allowed_child_types = args
+      elsif args.length == 1 && args.first.nil?
+        @allowed_child_types
       else
         # conditional assignment will trigger when a value is nil. since this
         # is an acceptable value for child types, we check if the types have

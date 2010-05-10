@@ -188,6 +188,7 @@ article {
           opacity: 0.0;
           position: absolute;
           right: 35px;
+          width: 16px;
         }
         
         aside.items ul li .delete {
@@ -251,19 +252,6 @@ article {
     
     aside.items a:hover {
       color: #555;
-    }
-    
-    aside.items #new_root {
-      position: fixed;
-      left: 30px;
-    }
-    
-    aside.items #new_root.flat {
-      bottom: 23px;
-    }
-    
-    aside.items #new_root.hierarchical {
-      bottom: 10px;
     }
   
   section {

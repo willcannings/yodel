@@ -8,7 +8,7 @@
     <% if @record.class.allowed_child_types_and_descendents.size > 1 %>
       <select class="record_types">
         <% @record.class.allowed_child_types_and_descendents.each do |model| %>
-          <option value="<%= model.name.demodulize.underscore %>"><%= model.name.demodulize.underscore.humanize.titleize %></option>
+          <option value="<%= model.name.demodulize.underscore %>" href="<%= model.controller.path_and_action_for(:create).path %>"><%= model.name.demodulize.underscore.humanize.titleize %></option>
         <% end %>
       </select>
     <% end %>

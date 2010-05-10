@@ -69,7 +69,7 @@ module Yodel
         
         # hack to get around mongo mapper mapping all dates to time objects...
         if value.is_a?(Time) || value.is_a?(Date)
-          if self.keys.has_key?(key)
+          if self.keys.has_key?(key) && !self.keys[key].type.nil?
             type = self.keys[key].type
           else
             type = value.class

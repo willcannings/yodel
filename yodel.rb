@@ -4,6 +4,7 @@
 # require 'yodel' will work with no problems.
 require 'active_support/memoizable'
 require 'active_support/core_ext'
+require 'image_science'
 require 'mongo_mapper'
 require 'pathname'
 require 'ostruct'

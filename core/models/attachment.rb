@@ -10,16 +10,16 @@ module Yodel
       @url ||= Pathname.new('/').join(Yodel.config.public_directory_name, relative_path)
     end
     
-    def path
-      @path ||= Yodel.config.public_directory.join(relative_path)
-    end
-    
     def relative_path
       @relative_path ||= File.join(relative_directory_path, file_name)
     end
     
     def relative_directory_path
       @relative_directory_path ||= File.join(record.site.identifier, Yodel.config.attachment_directory_name, attachment_name, id.to_s)
+    end
+    
+    def path
+      @path ||= Yodel.config.public_directory.join(relative_path)
     end
     
     def directory_path
@@ -53,7 +53,45 @@ module Yodel
       super(file)
       
       # crop to the required sizes
-      #record.associations
+      sizes = record.associations[attachment_name].query_options[:sizes]
+      return if sizes.nil? || sizes.empty?
+      
+      ImageScience.with_image(path.to_s) do |img|
+        iw, ih = img.width, img.height
+        sizes.each do |name, size|
+          sw, sh = size.split('x').collect(&:to_i)
+          aspect = sw.to_f / sh.to_f
+          w, h = (ih * aspect), (iw / aspect)
+          w = [iw, w].min.to_i
+          h = [ih, h].min.to_i
+          img.with_crop((iw-w)/2, (ih-h)/2, (iw+w)/2, (ih+h)/2) do |crop|
+            crop.resize(sw, sh) do |resized|
+              resized.save resized_image_path(name).to_s
+            end
+          end
+        end
+      end
+    end
+    
+    # TODO: shouldn't always be .jpg; have image extension as an option
+    def relative_resized_image_path(name)
+      File.join(relative_directory_path, "#{name}.jpg")
+    end
+    
+    def resized_image_path(name)
+      Yodel.config.public_directory.join(relative_resized_image_path(name))
+    end
+    
+    def resized_image_url(name)
+       Pathname.new('/').join(Yodel.config.public_directory_name, relative_resized_image_path(name))
+    end
+    
+    def method_missing(name, *args)
+      unless name.to_s.end_with?('_url')
+        super(name, args)
+      else
+        resized_image_url(name.to_s.sub('_url', ''))
+      end
     end
   end
   

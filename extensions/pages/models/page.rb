@@ -4,6 +4,8 @@ module Yodel
     single_root
     searchable
     creatable
+    default_child_type  self
+    allowed_child_types self
     
     # core page attributes
     key :permalink, String, display: false, required: true, unique: true, index: true, searchable: false

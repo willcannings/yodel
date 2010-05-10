@@ -27,7 +27,6 @@ module Yodel
       @model
     end
     
-    # TODO: determine if overriding name here (as a class method) breaks anything
     def self.name
       @name
     end
@@ -69,13 +68,13 @@ module Yodel
     private
       def update_record(record)
         values = params[self.class.name]
-
+        
         # FIXME: this is some 3am coding.... this can surely be done a better way
         # handle associations specially
         self.class.model.associations.values.each do |association|
           # attachments are handled using mass assignment
           next if association.type == :one && association.klass.ancestors.include?(Yodel::Attachment)
-          next unless association.query_options[:display]
+          next unless association.query_options[:display] || association.name == :parent
           
           # FIXME: only handling belong_to associations for now
           if association.type == :belongs_to
@@ -99,7 +98,6 @@ module Yodel
           values.delete(key.name.to_s)
         end
         
-        p values
         # handle all other attributes using mass assignment
         if record.update_attributes(values)
           json record: record.to_json_hash

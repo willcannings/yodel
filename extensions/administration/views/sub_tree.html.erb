@@ -2,10 +2,19 @@
   <img src="<%= @record.icon %>">
   <a href="#" onclick="loadRecord('<%= @record.class.controller.path_and_action_for(:show, id: @record.id).path %>'); return false;"><%= @record.name %></a>
   <a href="#" class="delete" onclick="destroyRecord('<%= @record.name %>', '<%= @record.class.controller.path_and_action_for(:destroy, id: @record.id).path %>'); return false;"><img src="/admin_static/images/delete.png"></a>
-  
-  <ul>
-    <% @record.children.each do |record| %>
-      <%= render_file Yodel.config.yodel_root.join('extensions', 'administration', 'views', 'sub_tree.html.erb'), record: record, level: @level + 1 %>
+
+  <% if @record.class.allowed_child_types_and_descendents.size > 0 %>
+    <a href="#" onclick="newRecord('<%= @record.class.allowed_child_types_and_descendents.first.name.demodulize.underscore %>', '<%= @record.class.allowed_child_types_and_descendents.first.controller.path_and_action_for(:create).path %>', '<%= @record.id %>'); return false;" class="new_child"><img src="/admin_static/images/add.png"></a>
+    <% if @record.class.allowed_child_types_and_descendents.size > 1 %>
+      <select class="record_types">
+        <% @record.class.allowed_child_types_and_descendents.each do |model| %>
+          <option value="<%= model.name.demodulize.underscore %>"><%= model.name.demodulize.underscore.humanize.titleize %></option>
+        <% end %>
+      </select>
     <% end %>
-  </ul>
+  <% end %>
 </li>
+
+<% @record.children.each do |record| %>
+  <%= render_file Yodel.config.yodel_root.join('extensions', 'administration', 'views', 'sub_tree.html.erb'), record: record, level: @level + 1 %>
+<% end %>

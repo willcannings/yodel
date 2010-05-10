@@ -57,12 +57,13 @@ function unselectAllRecords() {
 
 
 /* creating records */
-function newRecord(type, url) {
+function newRecord(type, url, parent) {
   unselectAllRecords();
   showSection('model_' + type);
   currentSection.down('.submit').value = 'Create';
   form = currentSection.down('form');
   
+  // reset the url, method and form values
   form.action = url;
   form.method = 'POST';
   form.getElements().each(function(element) {
@@ -72,6 +73,16 @@ function newRecord(type, url) {
   form.select('.upload_name').each(function(nametag) {
     nametag.innerHTML = '';
   });
+  
+  // set the parent if applicable
+  parent_id_element = form.down('.parent_id');
+  if(parent_id_element) {
+    if(parent)
+      parent_id_element.value = parent;
+    else
+      parent_id_element.value = null;
+  }
+    
 }
 
 

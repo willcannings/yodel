@@ -26,8 +26,10 @@ module Yodel
       if !@controller_models
         models = Set.new
         models << @handles.first
+        @handles.first.descendents.each {|model| models << model}
         @handles.first.allowed_child_types.each do |model|
           models << model
+          model.descendents.each {|child_type| models << child_type}
         end
         @controller_models = models.to_a.select {|model| model.creatable?}
       end

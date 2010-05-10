@@ -36,11 +36,9 @@ module Yodel
       end
       
       # finish off the html structure, then add hidden type and ID fields
-      type_name = name_for_attribute_name(model, 'type')
-      id_name = name_for_attribute_name(model, 'id')
+      parent_name = name_for_attribute_name(model, 'parent')
       html << "</ul></aside><input type='submit' class='submit'><input type='button' class='cancel' value='Cancel'>"
-      #html << "<input type='hidden' name='#{type_name}' id='#{id_for_name(type_name)}' #{"value='#{model.class.name}'" unless model.new?}>"
-      #html << "<input type='hidden' name='#{id_name}' id='#{id_for_name(id_name)}' #{"value='#{model.id.to_s}'" unless model.new?}>"
+      html << "<input type='hidden' class='parent_id' name='#{parent_name}' id='#{id_for_name(parent_name)}' #{"value='#{model.parent_id}'" unless model.new?}>"
       html << "</form></section>"
     end
     

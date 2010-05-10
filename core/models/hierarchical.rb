@@ -1,15 +1,9 @@
 module Yodel
   class Hierarchical < Record
-    belongs_to :parent, class: self
-    has_many :children, class: self, dependent: :destroy, order: 'index asc', foreign_key: 'parent_id'
+    belongs_to :parent, class: Yodel::Record
+    has_many :children, class: Yodel::Record, dependent: :destroy, order: 'index asc', foreign_key: 'parent_id'
     key :index, Integer, required: true, display: false
     ensure_index 'parent_id'
-    
-    # FIXME: workaround for a bug in mongo mapper
-    def initialize(attrs={}, from_database=false)
-      self.parent = nil
-      super
-    end
     
     def self.roots_for_site(site)
       self.all_for_site(site, parent_id: nil, order: 'index asc')
@@ -29,7 +23,7 @@ module Yodel
     end
     
     def root?
-      self.parent.nil?
+      self.parent_id.nil?
     end
     
     
@@ -148,9 +142,12 @@ module Yodel
     end
     
     def self.allowed_child_types_and_descendents
-      allowed_child_types.collect do |child_type|
-        [child_type, *child_type.descendents]
-      end.flatten
+      if !@allowed_child_types_and_descendents
+        @allowed_child_types_and_descendents = allowed_child_types.collect do |child_type|
+          [child_type, *child_type.descendents]
+        end.flatten
+      end
+      @allowed_child_types_and_descendents
     end
     
     def self.default_child_type(*args, &block)

@@ -184,6 +184,12 @@ article {
           display: block;
         }
         
+        aside.items ul li .record_types {
+          opacity: 0.0;
+          position: absolute;
+          right: 35px;
+        }
+        
         aside.items ul li .delete {
           visibility: hidden;
           float: right;
@@ -203,23 +209,35 @@ article {
         }
 
         aside.items ul li.indent_1 {
-          padding-left: 30px;
+          padding-left: 20px;
         }
         
         aside.items ul li.indent_2 {
-          padding-left: 60px;
+          padding-left: 40px;
         }
         
         aside.items ul li.indent_3 {
-          padding-left: 90px;
+          padding-left: 60px;
         }
         
         aside.items ul li.indent_4 {
-          padding-left: 120px;
+          padding-left: 80px;
         }
         
         aside.items ul li.indent_5 {
-          padding-left: 150px;
+          padding-left: 100px;
+        }
+        
+        aside.items ul li.indent_6 {
+          padding-left: 120px;
+        }
+        
+        aside.items ul li.indent_7 {
+          padding-left: 140px;
+        }
+        
+        aside.items ul li.indent_8 {
+          padding-left: 160px;
         }
         
         aside.items ul li ul a, aside.items ul li.selected ul a {
@@ -247,7 +265,7 @@ article {
     aside.items #new_root.hierarchical {
       bottom: 10px;
     }
-    
+  
   section {
     position: fixed;
     top: 130px;

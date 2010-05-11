@@ -6,7 +6,7 @@ module Yodel
     allowed_child_types self
     
     key :name, String, required: true
-    key :content, HTML, required: true
+    key :content, HTMLCode, required: true
     key :cacheable, Boolean
     key :dependencies, Array, display: false
     

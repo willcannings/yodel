@@ -17,7 +17,7 @@ module Yodel
     
     private
       def assign_errors_to_session
-        return if @record.nil? || @record.errors.nil?
+        return if @record.nil? || @record.errors.nil? || @record.errors.empty?
         session['errors'] = @record.errors.errors
       end
       

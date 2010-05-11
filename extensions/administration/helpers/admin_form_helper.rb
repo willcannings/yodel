@@ -162,7 +162,7 @@ module Yodel
       <script>
         Calendar.setup(
           {
-            dateField: '#{id}',
+            dateField: '#{id}_date',
             triggerElement: '#{id}_trigger'
           }
         )

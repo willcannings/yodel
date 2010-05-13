@@ -23,7 +23,7 @@ module Yodel
         if @controller.respond_to?(name.to_sym)
           @controller.send(name.to_sym, *args)
         else
-          super(name, args)
+          nil #super(name, args)
         end
       else
         if name.ends_with?('=')

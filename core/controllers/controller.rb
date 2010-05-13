@@ -96,14 +96,16 @@ module Yodel
     
     
     # rendering
-    def render_file(file, extra_context={})
+    def render_file(file, context=nil, extra_context={})
       File.open(file, 'r') do |file|
-        render_string file.read, extra_context
+        render_string file.read, context, extra_context
       end
     end
     
-    def render_string(markup, extra_context={})
-      context = RenderContext.new(self, extra_context)
+    def render_string(markup, context=nil, extra_context={})
+      if context.nil?
+        context = RenderContext.new(self, extra_context)
+      end
       Erubis::Eruby.new(markup).evaluate(context)
     end
     

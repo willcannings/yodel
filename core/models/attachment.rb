@@ -7,7 +7,7 @@ module Yodel
     embedded_in :record
     
     def url
-      @url ||= Pathname.new('/').join(Yodel.config.public_directory_name, relative_path)
+      @url ||= Pathname.new('/').join(relative_path)
     end
     
     def relative_path
@@ -83,7 +83,7 @@ module Yodel
     end
     
     def resized_image_url(name)
-       Pathname.new('/').join(Yodel.config.public_directory_name, relative_resized_image_path(name))
+       Pathname.new('/').join(relative_resized_image_path(name))
     end
     
     def method_missing(name, *args)

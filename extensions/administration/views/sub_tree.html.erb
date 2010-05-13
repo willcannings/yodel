@@ -16,5 +16,5 @@
 </li>
 
 <% @record.children.each do |record| %>
-  <%= render_file Yodel.config.yodel_root.join('extensions', 'administration', 'views', 'sub_tree.html.erb'), record: record, level: @level + 1 %>
+  <%= render_file Yodel.config.yodel_root.join('extensions', 'administration', 'views', 'sub_tree.html.erb'), nil, {record: record, level: @level + 1} %>
 <% end %>

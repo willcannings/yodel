@@ -6,7 +6,7 @@
 </h1>
 <ul class="tree">
   <% @roots.each do |root| %>
-    <%= render_file Yodel.config.yodel_root.join('extensions', 'administration', 'views', 'sub_tree.html.erb'), record: root, level: 0 %>
+    <%= render_file Yodel.config.yodel_root.join('extensions', 'administration', 'views', 'sub_tree.html.erb'), nil, {record: root, level: 0} %>
   <% end %>
 </ul>
 

@@ -133,7 +133,7 @@ module Yodel
     end
     
     def html_for_date_key_and_value(model, key, name, id, value)
-      "<img src='/admin_static/images/calendar.png' id='#{id}_trigger' class='calendar_trigger'>
+      "<img src='/admin/images/calendar.png' id='#{id}_trigger' class='calendar_trigger'>
       <input type='text' name='#{name}' value='#{value}' id='#{id}' class='date' readonly='readonly'>
       <script>
         Calendar.setup(
@@ -151,7 +151,7 @@ module Yodel
       hour_name = "#{name[0..-2]}_hour]"
       min_name  = "#{name[0..-2]}_min]"
       
-      "<img src='/admin_static/images/calendar.png' id='#{id}_trigger' class='calendar_trigger'>
+      "<img src='/admin/images/calendar.png' id='#{id}_trigger' class='calendar_trigger'>
       <input type='text' name='#{date_name}' value='#{value}' id='#{id}_date' class='date' readonly='readonly'>
       Hour: <select id='#{id}_hour' name='#{hour_name}' class='time_hour'>
         #{(0..23).collect {|hour| "<option>#{hour}</option>"}.join('\n')}

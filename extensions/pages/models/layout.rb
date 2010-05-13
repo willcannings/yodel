@@ -16,13 +16,15 @@ module Yodel
     end
     
     def render_with_controller(controller)
+      context = RenderContext.new(controller, {})
+      context.set_value('content', controller.render_string(self.content, context))
+      
       layout = self.parent
-      page_content = controller.render_string(self.content)
       until layout.nil?
-        page_content = controller.render_string(layout.content, content: page_content)
+        context.set_value('content', controller.render_string(layout.content, context))
         layout = layout.parent
       end
-      page_content
+      context.get_value('content')
     end
   end
 end

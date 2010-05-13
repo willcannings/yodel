@@ -1,7 +1,22 @@
 module Yodel
   class BlogController < PageController
     def show
+      @articles = @page.articles
+
+      if params['tag']
+        @articles.reject! {|article| !article.has_tag params['tag']}
+      elsif params['month'] && params['year']
+        month = params['month'].to_i
+        year = params['year'].to_i
+        @articles.reject! do |article|
+          article.published.month != month || article.published.year != year
+        end
+      end
+      
+      # render html as a normal page
       super
+      
+      # potential atom feed for the blog
       atom do |xml|
         xml.instruct!
 

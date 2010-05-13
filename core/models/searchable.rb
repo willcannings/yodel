@@ -20,6 +20,16 @@ module Yodel
           self.yodel_search_keywords = search_terms.to_a
         end
       end
+      
+      # by default records which include this module can be displayed in search results
+      def show_in_search?
+        true
+      end
+      
+      # needs to be overriden
+      def search_title
+        ''
+      end
     end
     
   end

@@ -30,6 +30,14 @@ module Yodel
       title
     end
     
+    def show_in_search?
+      show_in_search
+    end
+    
+    def search_title
+      'Page: ' + title
+    end
+    
     
     # rendering pages requires knowing a page permalink and layout to be used
     before_validation_on_create :assign_permalink

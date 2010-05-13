@@ -17,6 +17,11 @@ module Yodel
       parent
     end
     
+    def search_title
+      'News: ' + title
+    end
+    
+    
     def find_layout
       self.blog.article_layout
     end

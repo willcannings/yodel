@@ -1,11 +1,10 @@
 module Yodel
   class Group < Hierarchical
+    allowed_child_types self, Yodel::User
     multiple_roots
     creatable
-    key :name, String, required: true
     
-    default_child_type  Yodel::User
-    allowed_child_types self, Yodel::User
+    key :name, String, required: true
     
     def icon
       '/admin_static/images/group_icon.png'

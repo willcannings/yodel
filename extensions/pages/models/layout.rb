@@ -1,9 +1,8 @@
 module Yodel
   class Layout < Hierarchical
+    allowed_child_types self
     multiple_roots
     creatable
-    default_child_type  self
-    allowed_child_types self
     
     key :name, String, required: true
     key :content, HTMLCode, required: true

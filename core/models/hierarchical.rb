@@ -157,16 +157,6 @@ module Yodel
       @allowed_child_types_and_descendents
     end
     
-    def self.default_child_type(*args, &block)
-      if block_given?
-        @default_child_type = yield
-      elsif args.length >= 1
-        @default_child_type = args.first
-      else
-        @default_child_type ||= self
-      end
-    end
-    
     
     # some types may or may not allow more than one root per site, and may or
     # may not be able to act as a root for a site at all
@@ -176,33 +166,16 @@ module Yodel
     
     def self.multiple_roots
       @multiple_roots = true
-      @can_be_root = true
     end
     
     def self.single_root
       @multiple_roots = false
     end
-    
-    def self.can_be_root?
-      @can_be_root
-    end
-    
-    def self.cannot_be_root
-      @can_be_root = false
-      @multiple_roots = false
-    end
-    
-    def self.can_be_root
-      @can_be_root = true
-    end
-    
-    
+        
     # copy class instance attributes down the inheritance chain
     def self.inherited(child)
       super(child)
       child.instance_variable_set('@multiple_roots', @multiple_roots)
-      child.instance_variable_set('@can_be_root', @can_be_root)
-      child.instance_variable_set('@default_child_type', @default_child_type)
       child.instance_variable_set('@allowed_child_types', @allowed_child_types)
     end
   end

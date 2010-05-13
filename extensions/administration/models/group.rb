@@ -7,7 +7,7 @@ module Yodel
     key :name, String, required: true
     
     def icon
-      '/admin_static/images/group_icon.png'
+      '/admin/images/group_icon.png'
     end
   end
 end

@@ -46,7 +46,6 @@ require File.join(File.dirname(__FILE__), 'core', 'extensions')
 # by default, attachments are served from the public folder in the root of the app
 Yodel.use_middleware do |app|
   app.use Yodel::ConditionalFile, Yodel.config.public_directory
-  #app.use Rack::Static, :urls => ["/#{Yodel.config.public_directory_name}"], :root => Yodel.config.root
 end
 
 # load yodel and app extensions

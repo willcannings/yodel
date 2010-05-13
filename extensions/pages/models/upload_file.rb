@@ -8,7 +8,7 @@ module Yodel
     end
     
     def icon
-      '/pages_static/images/upload_file_icon.png'
+      '/admin/images/upload_file_icon.png'
     end
   end
 end

@@ -4,7 +4,7 @@ module Yodel
     sort_by :name
 
     def icon
-      '/pages_static/images/editable_file_icon.png'
+      '/admin/images/editable_file_icon.png'
     end
     
     # editable files are saved to disk for performance

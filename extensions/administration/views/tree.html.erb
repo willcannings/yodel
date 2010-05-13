@@ -1,7 +1,7 @@
 <h1>
   <%= tab_name %>
   <% if @roots.empty? || root_type.multiple_roots? %>
-    <a href="#" onclick="newRecord('<%= first_creatable_root_type.name.demodulize.underscore %>', '<%= first_creatable_root_type.controller.path_and_action_for(:create).path %>'); return false;"><img src="/admin_static/images/add.png"></a>
+    <a href="#" onclick="newRecord('<%= first_creatable_root_type.name.demodulize.underscore %>', '<%= first_creatable_root_type.controller.path_and_action_for(:create).path %>'); return false;"><img src="/admin/images/add.png"></a>
   <% end %>
 </h1>
 <ul class="tree">

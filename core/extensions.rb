@@ -7,8 +7,28 @@ module Yodel
       require path.join('init.rb')
     else
       Dir.chdir(path)
+      Dir['*/'].sort.each {|directory| load_extension(path.join(directory))}
+    end
+  end
+  
+  def self.load_extension(path)
+    return if !File.exist?(path) || !File.directory?(path)
+    path = Pathname.new(path)
+    
+    if File.directory?(path.join('public'))
+      use_middleware {|app| app.use Yodel::ConditionalFile, path.join('public')}
+    end
+    
+    require_or_init_directory(path)
+  end
+  
+  def self.require_or_init_directory(path)
+    if File.exist?(path.join('init.rb'))
+      require path.join('init.rb')
+    else
+      Dir.chdir(path)
       Dir['*.rb'].sort.collect {|file| path.join(file)}.each {|file_path| require file_path}
-      Dir['*/'].each {|directory| Yodel.load_extensions(path.join(directory))}
+      Dir['*/'].sort.each {|directory| require_or_init_directory(path.join(directory))}
     end
   end
   

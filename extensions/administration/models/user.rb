@@ -11,7 +11,7 @@ module Yodel
     end
     
     def icon
-      '/admin_static/images/user_icon.png'
+      '/admin/images/user_icon.png'
     end
   end
 end

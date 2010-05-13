@@ -24,7 +24,7 @@ module Yodel
     
     # admin interface
     def icon
-      '/pages_static/images/page_icon.png'
+      '/admin/images/page_icon.png'
     end
     
     def name

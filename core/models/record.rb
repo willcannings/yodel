@@ -16,7 +16,16 @@ module Yodel
     ensure_index 'site_id'
     
     def self.all_for_site(site, conditions={})
-      self.all({site_id: site.id}.merge(conditions)) + self.descendents.collect {|child| child.all_for_site(site, conditions)}.flatten
+      records = self.all({site_id: site.id}.merge(conditions)) + self.descendents.collect {|child| child.all_for_site(site, conditions)}.flatten
+      if sort_by
+        records.sort_by {|record| record.send(sort_by)}
+      else
+        records
+      end
+    end
+    
+    def self.sort_by(sym=nil)
+      @sort_by ||= sym
     end
     
     def self.first_for_site(site, conditions={})
@@ -134,17 +143,23 @@ module Yodel
     
     
     # record classes can have an associated controller
+    # TODO: records should be able to have multiple controller types, e.g controller admin: bla, page: other
     def self.controller=(controller)
       @controller = controller
     end
     
-    def self.controller
-      @controller
+    def controller
+      self.class.controller
+    end
+    
+    def self.controller(controller=nil)
+      @controller ||= controller
     end
     
     def self.inherited(child)
       super(child)
       child.instance_variable_set('@controller', @controller)
+      child.instance_variable_set('@sort_by', @sort_by)
     end
     
     private

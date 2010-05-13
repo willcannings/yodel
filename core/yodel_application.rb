@@ -5,6 +5,7 @@ module Yodel
       use Rack::Reloader, 0
       use Rack::ContentLength
       use Rack::NestedParams
+      use Rack::Sendfile
       use Rack::Session::Cookie, key: 'yodel.session', secret: Yodel.config.session_secret
       Yodel.initialise_middleware_with_app(self)
       run Yodel::RequestHandler.new
@@ -20,14 +21,11 @@ module Yodel
     def call(env)
       request  = Rack::Request.new(env)
       response = Rack::Response.new
-      controller_constant, action, match = Yodel.routes.match_request(request)
+      site = Site.find_by_domain(request.host)
+      controller, action, match = Yodel.routes.match_request(request)
       
-      if controller_constant && (site = Site.find_by_domain(request.host))
-        request.params['format'] = request.params['format'].gsub('.', '') if request.params['format']
-        controller = controller_constant.new(request, response, match, site)
-        controller.run_before_filters(action)
-        controller.send(action)
-        controller.run_after_filters(action)
+      unless controller.nil? || site.nil?
+        controller.handle_request(request, response, site, action)
         response.finish
       else
         [404, {"Content-Type" => "text/plain"}, ["URL Not Found: #{request.path}"]]

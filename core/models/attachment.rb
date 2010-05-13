@@ -101,7 +101,7 @@ module Yodel
     end
     
     def remove_files
-      FileUtils.rm path
+      FileUtils.rm path if exist?
     end
   end
 end

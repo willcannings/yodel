@@ -1,13 +1,19 @@
 module Yodel
   class Controller
-    def initialize(request, response, match, site)
-      @request, @response, @match, @site = request, response, match, site
+    def initialize(request, response, site)
+      @request, @response, @site = request, response, site
       @env = request.env
-      
-      # merge the named captures from match (such as 'id') with params
-      match.names.each do |capture_name|
-        @request.params[capture_name] = match[capture_name]
-      end
+    end
+    
+    def self.handle_request(request, response, site, action)
+      controller = self.new(request, response, site)
+      controller.handle_request_with_action(action)
+    end
+    
+    def handle_request_with_action(action)
+      run_before_filters(action)
+      send(action)
+      run_after_filters(action)
     end
     
     # basic environment accessors
@@ -25,10 +31,6 @@ module Yodel
     
     def response
       @response
-    end
-    
-    def match
-      @match
     end
     
     def site
@@ -138,6 +140,7 @@ module Yodel
     after_filter :write_response
     def write_response
       return unless response.empty?
+      return if @responses.nil?
       
       @responses.each do |name, data|
         mime_type = Yodel.mime_types.type(name)

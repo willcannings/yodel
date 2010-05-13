@@ -31,7 +31,7 @@ module Yodel
         elsif name.ends_with?('?')
           instance_variable_defined? name[0...-1]
         else
-          instance_variable_get name
+          instance_variable_defined?(name) ? instance_variable_get(name) : nil
         end
       end
     end

@@ -10,7 +10,10 @@ module Yodel
     end
     
     def sort_routes!
+      last = @routes.select(&:last?).first
+      @routes.delete(last) if !last.nil?
       @routes = @routes.sort_by {|path, method, controller, action| -path.to_s.length}
+      @routes << last if !last.nil?
       @sorted = true
     end
     
@@ -21,10 +24,19 @@ module Yodel
       
       @routes.each do |route|
         match = route.match(path, request_method)
-        return [route.controller, route.action, match] unless match.nil?
+        unless match.nil?
+          merge_named_captures_with_params(match, request)
+          return [route.controller, route.action, match]
+        end
       end
       
       [nil, nil, nil]
+    end
+    
+    def merge_named_captures_with_params(match, request)
+      match.names.each do |capture_name|
+        request.params[capture_name] = match[capture_name]
+      end
     end
     
     def path_and_action_for(controller, action, options)
@@ -40,9 +52,10 @@ module Yodel
     def initialize(route)
       @method = route[:method].to_s.downcase.to_sym
       @original_path = route[:path]
-      @path = Regexp.new("^#{route[:path].chomp('/').gsub('/', '/+')}(?<format>\\.\\w+)?(?<glob>.*)", nil, 'n') # from Rack::URLMap
+      @path = Regexp.new("^#{route[:path].chomp('/').gsub('/', '/+')}(?<glob>.*?)(\\.(?<format>\\w+))?$", nil, 'n')
       @controller = route[:controller]
       @action = route[:action]
+      @last = route[:last]
     end
     
     def match(path, request_method)
@@ -56,6 +69,10 @@ module Yodel
         path.gsub!(/\(\?\<#{name}\>.+\)/, value.to_s)
       end
       OpenStruct.new(path: path, method: @method)
+    end
+    
+    def last?
+      @last
     end
   end
   

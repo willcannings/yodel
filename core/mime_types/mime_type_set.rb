@@ -61,13 +61,17 @@ module Yodel
       default_mime_type(type)
     end
     
-    # TODO: separate to a transformer, a builder function
-    # may be required, e.g for PDF's:
-    # pdf do |document|
-    #   document.text "hello world"
-    # end
-    # builder creates document
-    # transformer calls document.to_pdf or something
+    def builder(&block)
+      @builder = block
+    end
+    
+    def create_builder
+      if @builder
+        @builder.call
+      else
+        nil
+      end
+    end
     
     def transformer(&block)
       @transformer = block

@@ -20,20 +20,18 @@ module Yodel
     end
     
     def self.controller_models
+      return [] if @handles.nil?
       raise "Admin Tree Controller can only handle a single record type" if @handles.size > 1
       raise "This Admin Tree Controller (#{self.name}) doesn't have a 'handles' clause. You must specify a record type for this controller to handle" if @handles.nil? || @handles.empty?
       
-      if !@controller_models
-        models = Set.new
-        models << @handles.first
-        @handles.first.descendents.each {|model| models << model}
-        @handles.first.allowed_child_types.each do |model|
-          models << model
-          model.descendents.each {|child_type| models << child_type}
-        end
-        @controller_models = models.to_a.select {|model| model.creatable?}
+      models = Set.new
+      models << @handles.first
+      @handles.first.descendents.each {|model| models << model}
+      @handles.first.allowed_child_types.each do |model|
+        models << model
+        model.descendents.each {|child_type| models << child_type}
       end
-      @controller_models
+      models.to_a.select {|model| model.creatable?}
     end
     
     def controller_models

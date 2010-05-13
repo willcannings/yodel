@@ -33,6 +33,10 @@ module Yodel
     # the models this admin controller is responsible for
     def self.handles(*models)
       @handles = models
+    end
+    
+    def self.generate_admin_model_controllers
+      return if @handles.nil?
       self.controller_models.each do |model|
         eval "class Yodel::Admin#{model.name.demodulize.camelcase}ModelController < Yodel::AdminModelController
                 admin_controller #{self.name}

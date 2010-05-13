@@ -11,6 +11,7 @@ module Yodel
     end
     
     def self.controller_models
+      return [] if @handles.nil?
       if !@controller_models
         models = Set.new
         @handles.each do |model|

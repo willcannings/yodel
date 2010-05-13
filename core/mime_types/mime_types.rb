@@ -27,6 +27,17 @@ Yodel.mime_types do
     end
   end
   
+  mime_type :xml do
+    extensions 'xml'
+    mime_types 'text/xml', 'application/xml'
+    builder do
+      Builder::XmlMarkup.new
+    end
+    transformer do |xml|
+      xml.instance_variable_get('@target')
+    end
+  end
+  
   mime_type :pdf do
     extensions 'pdf'
     mime_types 'application/pdf', 'application/x-pdf'

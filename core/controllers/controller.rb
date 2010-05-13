@@ -129,7 +129,9 @@ module Yodel
       @responses ||= {}
       
       if block_given?
-        @responses[name] = yield
+        mime_type = Yodel.mime_types.type(name)
+        raise "Unknown Mime Type: #{name}" if mime_type.nil?
+        @responses[name] = yield(mime_type.create_builder)
       elsif args.length >= 1
         @responses[name] = args.first
       else

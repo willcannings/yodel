@@ -3,13 +3,12 @@ module Yodel
     allowed_child_types self
     single_root
     searchable
-    creatable    
+    creatable
     
     # core page attributes
     key :permalink, String, display: false, required: true, unique: true, index: true, searchable: false
     key :title, String, required: true
     key :content, HTML
-    key :published, Time, default: lambda { Time.now }
     
     # behaviour tab
     key :show_in_menus, Boolean, tab: 'Behaviour', default: true

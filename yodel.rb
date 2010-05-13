@@ -7,7 +7,9 @@ require 'active_support/core_ext'
 require 'image_science'
 require 'mongo_mapper'
 require 'pathname'
+require 'hpricot'
 require 'ostruct'
+require 'builder'
 require 'erubis'
 require 'json'
 require 'rack'
@@ -52,6 +54,13 @@ end
 Yodel.load_extensions(Yodel.config.yodel_root.join('extensions'))
 Yodel.load_extensions(Yodel.config.root.join('extensions'))
 Yodel.load_extensions(Yodel.config.root.join('app'))
+
+# FIXME: hack!!!
+ObjectSpace.each_object do |obj|
+  if obj.respond_to?(:ancestors) && obj.ancestors.include?(Yodel::AdminController)
+    obj.generate_admin_model_controllers
+  end
+end
 
 # finally load and start the yodel application
 Dir.chdir(Yodel.config.root)

@@ -10,7 +10,14 @@ module Yodel
     
         before_save :update_search_keywords
         def update_search_keywords
-          # TODO: update search keywords default impl
+          search_terms = Set.new
+          self.class.keys.values.each do |key|
+            next if key.name.starts_with?('_') || key.options[:searchable] == false || key.type.nil? || !key.type.instance_methods.include?(:search_terms_set)
+            self.send(key.name).search_terms_set.each do |term|
+              search_terms << term.downcase
+            end
+          end
+          self.yodel_search_keywords = search_terms.to_a
         end
       end
     end

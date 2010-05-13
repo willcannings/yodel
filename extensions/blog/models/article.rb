@@ -7,6 +7,7 @@ module Yodel
     key :published, Time, default: lambda { Time.now }
     key :tags, String
     image :image, article: '553x232'
+    attachment :attachment
 
     def icon
       '/admin/images/article_icon.png'
@@ -35,7 +36,7 @@ module Yodel
 
     def paragraphs_from(index)
       paragraphs = Hpricot(content).search('/p')
-      paragraphs[index..-1].collect {|p| p.inner_html}.join('')
+      paragraphs[index..-1].collect {|p| p.to_s}.join('')
     end
   end
 end

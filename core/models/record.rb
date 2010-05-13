@@ -166,6 +166,7 @@ module Yodel
       def self.define_attachment_setter(name)
         class_eval "
           def #{name}=(file)
+            return if file.nil?
             if file[:tempfile]
               #{name}.build(attachment_name: '#{name}') if #{name}.nil?
               #{name}.set_file(file)

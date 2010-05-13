@@ -53,7 +53,11 @@ module Yodel
     
     # page controller
     def self.page_controller(controller=nil)
-      @page_controller ||= controller
+      if controller
+        @page_controller = controller
+      else
+        @page_controller
+      end
     end
     
     def page_controller

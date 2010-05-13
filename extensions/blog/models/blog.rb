@@ -4,6 +4,7 @@ module Yodel
     allowed_child_types Yodel::Article
     has_many :articles, class: Yodel::Article
     belongs_to :article_layout, class: Yodel::Layout, display: true, required: true, tab: 'Behaviour'
+    page_controller Yodel::BlogController
     
     def icon
       '/admin/images/blog_icon.png'

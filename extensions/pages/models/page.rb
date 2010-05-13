@@ -51,7 +51,7 @@ module Yodel
     
     def path
       # the first ancestor is the root page (we ignore its permalink since it is accessed by '/')
-      '/' + ancestors[1..-1].collect(&:permalink).join('/')
+      '/' + ancestors.reverse[1..-1].collect(&:permalink).join('/')
     end
     
     # page controller

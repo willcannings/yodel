@@ -12,6 +12,10 @@ module Yodel
       '/admin/images/video_icon.png'
     end
     
+    def search_title
+      'Video: ' + title
+    end
+    
     def root_video_page
       parent.parent
     end

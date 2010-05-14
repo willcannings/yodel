@@ -11,5 +11,9 @@ module Yodel
     def icon
       '/admin/images/event_icon.png'
     end
+    
+    def search_title
+      'Event: ' + title
+    end
   end
 end

@@ -112,7 +112,7 @@ module Yodel
         			  'style','|','hr','link','unlink','|','cut','copy','paste','print'],
         	footer: false,
         	xhtml: true,
-        	cssfile: 'style.css',
+        	cssfile: '/admin/css/tinyeditor.css',
         	bodyid: '#{id}_html',
         	footerclass: 'tefooter'
         });

@@ -31,6 +31,10 @@ module Yodel
       end
     end
     
+    def root_record
+      self.ancestors[-1]
+    end
+    
     
     # insertion and deletion to maintin the integrity of the 'index' field
     before_destroy :remove_from_parent

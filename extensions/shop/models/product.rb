@@ -4,7 +4,7 @@ module Yodel
     creatable
     
     image :image, product: '439x268', thumb: '217x132'
-    key :price, String
+    key :price, Decimal
     
     def icon
       '/admin/images/product_icon.png'

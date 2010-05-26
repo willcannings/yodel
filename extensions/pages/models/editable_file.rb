@@ -7,7 +7,10 @@ module Yodel
       '/admin/images/editable_file_icon.png'
     end
     
-    # editable files are saved to disk for performance
+    # editable files are saved to disk for performance, and to make editing
+    # files during development easier. the on disk version of each file takes
+    # precedence to anything in the DB, so when deploying an app ensure the
+    # public dir is deployed as well
     def file_path
       @file_path ||= Yodel.config.public_directory.join(self.site.identifier, name)
     end

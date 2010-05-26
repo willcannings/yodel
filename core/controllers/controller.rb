@@ -96,6 +96,7 @@ module Yodel
     
     
     # rendering
+    # TODO: possible cleanup: why have extra context and context object; just force callers to construct a context object anyway?
     def render_file(file, context=nil, extra_context={})
       File.open(file, 'r') do |file|
         render_string file.read, context, extra_context

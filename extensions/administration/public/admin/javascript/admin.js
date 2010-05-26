@@ -244,13 +244,23 @@ Event.observe(document, 'keydown', function(e){
     
     // Submit the form
     form = $$('#model_layout form').first() 
-    $('layout_content').morph('background: #DEF3D4', {
-      duration: .5,
-      transition: 'linear',
-    }).morph('background: #FFFFFF');
     
     // Submit form
-    form.request();
+    form.request(
+    {
+      onSuccess: function(){
+        $('layout_content').morph('background: #3C9027', {
+          duration: .5,
+          transition: 'linear',
+        }).morph('background: #FFFFFF');
+      },
+      onFailure: function(){
+        $('layout_content').morph('background: #D01D1D', {
+          duration: .5,
+          transition: 'linear',
+        }).morph('background: #FFFFFF');        
+      }
+    });
     
     // Stop the event (stops safari from saving the document)
     Event.stop(e);

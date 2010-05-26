@@ -219,3 +219,50 @@ document.observe("dom:loaded", function() {
     })
   })
 });
+
+
+//===================================
+// Command + S for save
+// Author: James Martin
+//===================================
+var isCtrl = false;
+Event.observe(document, 'keyup', function(e){     
+  if (e.keyCode == 91){
+    isCtrl = false;
+  }
+});
+Event.observe(document, 'keydown', function(e){     
+  
+  // Debugging
+  //alert(e.keyCode);
+  
+  if (e.keyCode == 91){
+    isCtrl = true;
+  }
+  
+  if (e.keyCode == 83 && isCtrl == true){
+    
+    // Submit the form
+    form = $$('#model_layout form').first() 
+    
+    // Submit form
+    form.request(
+    {
+      onSuccess: function(){
+        $('layout_content').morph('background: #3C9027', {
+          duration: .5,
+          transition: 'linear',
+        }).morph('background: #FFFFFF');
+      },
+      onFailure: function(){
+        $('layout_content').morph('background: #D01D1D', {
+          duration: .5,
+          transition: 'linear',
+        }).morph('background: #FFFFFF');        
+      }
+    });
+    
+    // Stop the event (stops safari from saving the document)
+    Event.stop(e);
+  } 
+});

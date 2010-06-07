@@ -11,8 +11,12 @@ module Yodel
     # files during development easier. the on disk version of each file takes
     # precedence to anything in the DB, so when deploying an app ensure the
     # public dir is deployed as well
-    def file_path
-      @file_path ||= Yodel.config.public_directory.join(self.site.identifier, name)
+    def file_path(was=false)
+      if was
+        self.site.directory_path.join(name_was)
+      else
+        self.site.directory_path.join(name)
+      end
     end
     
     after_save :save_to_disk
@@ -23,8 +27,10 @@ module Yodel
     end
     
     after_destroy :remove_from_disk
+    before_save :remove_from_disk
     def remove_from_disk
-      FileUtils.rm file_path if File.exist?(file_path)
+      path = file_path(self.name_changed?)
+      FileUtils.rm path if File.exist?(path)
     end
   end
   

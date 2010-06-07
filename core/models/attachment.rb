@@ -16,11 +16,11 @@ module Yodel
     end
     
     def relative_path
-      @relative_path ||= File.join(relative_directory_path, file_name)
+      @relative_path ||= File.join(relative_directory_path, self.file_name)
     end
     
     def relative_directory_path
-      @relative_directory_path ||= File.join(record.site.identifier, Yodel.config.attachment_directory_name, attachment_name, id.to_s)
+      @relative_directory_path ||= File.join(record.site.identifier, Yodel.config.attachment_directory_name, self.attachment_name, self.id.to_s)
     end
     
     def path
@@ -31,23 +31,32 @@ module Yodel
       @directory_path ||= Yodel.config.public_directory.join(relative_directory_path)
     end
     
+    def reset_memoised_values
+      @url = @relative_path = @relative_directory_path = @path = @directory_path = nil
+    end
+    
     def exist?
       File.exist?(path)
     end
     
     before_destroy :remove_files
     def remove_files
-      FileUtils.rmdir directory_path
+      FileUtils.rmdir directory_path if exist?
     end
     
     def set_file(file)
+      # delete the old file and reset memoised paths
+      remove_files
+      reset_memoised_values
+
+      # reset the name and mime type of the attachment
       self.file_name = file[:filename]
       self.mime_type = file[:type]
       temp = file[:tempfile]
       temp_path = temp.path
       temp.close
       
-      remove_files if exist?
+      # for simplicity we move the uploaded file (from /tmp) rather than copying
       FileUtils.mkpath directory_path
       FileUtils.mv(temp_path, path)
     end

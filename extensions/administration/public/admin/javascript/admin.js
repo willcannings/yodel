@@ -34,6 +34,16 @@ function toggleSidebar() {
   sidebarOpen = !sidebarOpen;
 }
 
+function showSidebar() {
+  if(!sidebarOpen)
+    toggleSidebar();
+}
+
+function closeSidebar() {
+  if(sidebarOpen)
+    toggleSidebar();
+}
+
 
 /* sidebar tabs */
 function selectTab(element) {
@@ -119,6 +129,7 @@ function processRecord(transport) {
     type = transport.responseJSON.type;
     
     // show the correct form and change the submit text
+    closeSidebar();
     showSection('model_' + type);
     currentSection.down('.submit').value = 'Save';
     

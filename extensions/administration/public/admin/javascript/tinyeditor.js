@@ -69,7 +69,7 @@ TINY.editor=function(){
 					var style=styles[x];
 					sel.options[x]=new Option(style[0],style[1])
 				}
-				h.appendChild(sel)
+				h.appendChild(sel);
 			}else if(c[id]){
 				var div=document.createElement('div'), x=c[id], func=x[2], ex, pos=x[0]*offset;
 				div.className=obj.controlclass;
@@ -176,6 +176,7 @@ TINY.editor=function(){
 			if(this.xhtml){
 				v=v.replace(/<span class="apple-style-span">(.*)<\/span>/gi,'$1');
 				v=v.replace(/ class="apple-style-span"/gi,'');
+				v=v.replace(/<div>(.*)<\/div>/gi,'<p>$1</p>');
 				v=v.replace(/<span style="">/gi,'');
 				v=v.replace(/<br>/gi,'<br />');
 				v=v.replace(/<br ?\/?>$/gi,'');

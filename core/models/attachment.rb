@@ -46,8 +46,10 @@ module Yodel
     
     def set_file(file)
       # delete the old file and reset memoised paths
-      remove_files
-      reset_memoised_values
+      unless new?
+        remove_files
+        reset_memoised_values
+      end
 
       # reset the name and mime type of the attachment
       self.file_name = file[:filename]

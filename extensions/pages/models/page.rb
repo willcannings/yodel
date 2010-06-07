@@ -42,7 +42,21 @@ module Yodel
     # rendering pages requires knowing a page permalink and layout to be used
     before_validation_on_create :assign_permalink
     def assign_permalink
-      self.permalink = self.title.parameterize('_')
+      base_permalink = self.title.parameterize('_')
+      suffix = ''
+      count  = 0
+      
+      # ensure other pages don't have the same path as this page
+      page_siblings = self.siblings
+      puts "CHECKING AGAINST: #{page_siblings.collect(&:permalink)}, #{self.parent_id}"
+      while !page_siblings.select {|page| page.permalink == base_permalink + suffix}.empty?
+        count += 1
+        suffix = "_#{count}"
+        puts "INCREMENTED, suffix is now: [#{suffix}]"
+      end
+      
+      puts "assigning permalink: #{base_permalink + suffix}"
+      self.permalink = base_permalink + suffix
     end
     
     def find_layout

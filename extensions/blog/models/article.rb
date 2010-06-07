@@ -33,9 +33,10 @@ module Yodel
       all_tags.include?(tag)
     end
 
+    # TODO: extract this out to pages rather than just articles
     def paragraph(index)
       paragraphs = Hpricot(content).search('/p')
-      unless paragraphs.nil?
+      unless paragraphs.nil? || paragraphs[index].nil?
         paragraphs[index].inner_html
       else
         ''

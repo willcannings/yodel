@@ -4,7 +4,7 @@ module Yodel
     multiple_roots
     creatable
     
-    key :name, String, required: true
+    key :name, String, required: true, unique: true
     key :content, HTMLCode, required: true
     key :cacheable, Boolean
     key :dependencies, Array, display: false

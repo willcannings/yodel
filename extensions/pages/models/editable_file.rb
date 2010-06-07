@@ -1,6 +1,6 @@
 module Yodel
   class EditableFile < Record
-    key :name, String, required: true, index: true
+    key :name, String, required: true, index: true, unique: true
     sort_by :name
 
     def icon

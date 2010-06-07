@@ -15,7 +15,7 @@ module Yodel
     end
     
     def siblings
-      @siblings ||= Hierarchical.all parent_id: parent.try(:id), order: 'index asc'
+      @siblings ||= Hierarchical.all parent_id: self.parent_id, order: 'index asc'
     end
     
     def ancestors

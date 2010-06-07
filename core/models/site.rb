@@ -15,5 +15,9 @@ module Yodel
     def self.find_by_identifier(identifier)
       Site.first identifier: identifier
     end
+    
+    def directory_path
+      @directory_path ||= Yodel.config.public_directory.join(self.identifier)
+    end
   end
 end

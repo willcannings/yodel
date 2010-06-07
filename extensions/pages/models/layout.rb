@@ -15,15 +15,18 @@ module Yodel
     def invalidate_cache
     end
 
+
     # layouts are saved to disk to make editing during development easier.
     # the on disk version of each file takes precedence to anything in the
     # DB, so when deploying an app ensure the public dir is deployed as well
     def file_path
-      @file_path ||= Yodel.config.public_directory.join(self.site.identifier, "#{name}.html")
+      @file_path ||= self.site.directory_path.join("#{name}.html")
     end
     
     after_save :save_to_disk
     def save_to_disk
+      remove_from_disk
+      FileUtils.mkpath self.site.directory_path
       File.open(file_path, 'w') do |file|
         file.write content
       end

@@ -1,3 +1,8 @@
+# TODO: work out a way of refactoring where files are stored in to the site model
+# already have directory_path method in there; need to use it somehow here (can't
+# because the methods here rely on 'abstract_path' which is relative to the root
+# dir, and not the actual path to the app which is what directory_path is)
+
 module Yodel
   class Attachment
     include ::MongoMapper::EmbeddedDocument

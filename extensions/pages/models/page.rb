@@ -48,14 +48,11 @@ module Yodel
       
       # ensure other pages don't have the same path as this page
       page_siblings = self.siblings
-      puts "CHECKING AGAINST: #{page_siblings.collect(&:permalink)}, #{self.parent_id}"
       while !page_siblings.select {|page| page.permalink == base_permalink + suffix}.empty?
         count += 1
         suffix = "_#{count}"
-        puts "INCREMENTED, suffix is now: [#{suffix}]"
       end
       
-      puts "assigning permalink: #{base_permalink + suffix}"
       self.permalink = base_permalink + suffix
     end
     

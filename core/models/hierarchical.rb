@@ -15,7 +15,7 @@ module Yodel
     end
     
     def siblings
-      @siblings ||= Hierarchical.all parent_id: self.parent_id, order: 'index asc'
+      @siblings ||= Record.all parent_id: BSON::ObjectID.from_string(self.parent_id.to_s), order: 'index asc'
     end
     
     def ancestors

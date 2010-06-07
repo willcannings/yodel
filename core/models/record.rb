@@ -74,6 +74,7 @@ module Yodel
       hash.each do |key, value|
         hash[key] = value.to_s if value.is_a?(BSON::ObjectID)
         hash[key] = cleanse_hash(value) if value.is_a?(Hash)
+        hash[key] = value.force_encoding("UTF-8") if value.is_a?(String)
         
         if key.end_with?('_id')
           hash.delete(key)

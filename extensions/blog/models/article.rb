@@ -35,7 +35,11 @@ module Yodel
 
     def paragraph(index)
       paragraphs = Hpricot(content).search('/p')
-      paragraph = paragraphs[index].inner_html
+      unless paragraphs.nil?
+        paragraphs[index].inner_html
+      else
+        ''
+      end
     end
 
     def paragraphs_from(index)

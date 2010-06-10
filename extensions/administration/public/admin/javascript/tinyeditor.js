@@ -176,7 +176,6 @@ TINY.editor=function(){
 			if(this.xhtml){
 				v=v.replace(/<span class="apple-style-span">(.*)<\/span>/gi,'$1');
 				v=v.replace(/ class="apple-style-span"/gi,'');
-				v=v.replace(/<div>(.*)<\/div>/gi,'<p>$1</p>');
 				v=v.replace(/<span style="">/gi,'');
 				v=v.replace(/<br>/gi,'<br />');
 				v=v.replace(/<br ?\/?>$/gi,'');

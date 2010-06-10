@@ -102,6 +102,24 @@ module Yodel
           values.delete(key.name.to_s)
         end
         
+        # ensure HTML is in the format we're expecting
+        self.class.model.keys.values.each do |key|
+          next unless key.type && key.type.ancestors.include?(HTML)
+          document = Hpricot(values[key.name.to_s] || '')
+          
+          # all floating text elements need to be contained in a P tag
+          document.search("/text()").wrap("<p></p>")
+          
+          # all divs should be p's
+          document.search("/div").each do |div|
+            p = div.make("<p>#{div.inner_html}</p>")
+            div.parent.replace_child(div, p)
+          end
+          
+          record.send("#{key.name}=", document.to_html)
+          values.delete(key.name.to_s)
+        end
+        
         # handle times specially; dates are ok to be set by mass assignment
         self.class.model.keys.values.each do |key|
           next unless key.type && key.type.ancestors.include?(Time)

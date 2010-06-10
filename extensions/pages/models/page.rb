@@ -38,6 +38,15 @@ module Yodel
       'Page: ' + title
     end
     
+    # TODO: make sure this works?
+    def paragraph(index)
+      paragraphs = Hpricot(content).search('/p')
+      unless paragraphs.nil? || paragraphs[index].nil?
+        paragraphs[index].inner_html
+      else
+        ''
+      end
+    end
     
     # rendering pages requires knowing a page permalink and layout to be used
     before_validation_on_create :assign_permalink

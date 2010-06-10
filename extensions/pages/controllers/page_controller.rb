@@ -3,6 +3,7 @@ module Yodel
     def show
       @content = @page.content
       html @page.find_layout.render_with_controller(self)
+      json :content => @page.content, :title => @page.title
     end
   end
 end

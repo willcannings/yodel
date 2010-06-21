@@ -116,6 +116,15 @@ module Yodel
             div.parent.replace_child(div, p)
           end
           
+          # remove styling from tags
+          document.search("/p").each do |p|
+            new_p = p.make("<p>#{p.inner_html}</p>")
+            p.parent.replace_child(p, new_p)
+          end
+          
+          # remove empty p tags
+          # TODO
+          
           record.send("#{key.name}=", document.to_html)
           values.delete(key.name.to_s)
         end

@@ -35,7 +35,7 @@ module Yodel
     end
     
     def search_title
-      'Page: ' + title
+      title
     end
     
     # TODO: make sure this works?

@@ -32,10 +32,5 @@ module Yodel
     def has_tag(tag)
       all_tags.include?(tag)
     end
-
-    def paragraphs_from(index)
-      paragraphs = Hpricot(content).search('/p')
-      paragraphs[index..-1].collect {|p| p.to_s}.join('')
-    end
   end
 end

@@ -48,6 +48,15 @@ module Yodel
       end
     end
     
+    def paragraphs_from(index)
+      paragraphs = Hpricot(content).search('/p')
+      unless paragraphs.nil?
+        paragraphs[index..-1].collect {|p| p.to_s}.join('')
+      else
+        ''
+      end
+    end
+    
     # rendering pages requires knowing a page permalink and layout to be used
     before_validation_on_create :assign_permalink
     def assign_permalink

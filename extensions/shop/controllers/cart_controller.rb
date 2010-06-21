@@ -3,15 +3,26 @@ module Yodel
     route "/cart"
     route "/add_to_cart/(?<id>\\w+)", action: :add_to_cart
     route "/remove_from_cart/(?<id>\\w+)", action: :remove_from_cart
+    route "/checkout", action: :checkout
+    route "/finish", action: :finish
     
+    # TODO: products hash as before filter
     def index
-      @site = site
-      @products = {}
-      (session['cart'] || {}).each do |product_id, count|
-        @products[Yodel::Product.first(id: product_id)] = count
-      end
+      build_products_hash
       @page = OpenStruct.new(title: 'Cart', path: '/cart', ancestors: [], root_record: Yodel::Page.all_for_site(site).first)
       html Yodel::Layout.first(name: 'Cart').render_with_controller(self)
+    end
+    
+    def checkout
+      build_products_hash
+      @page = OpenStruct.new(title: 'Checkout', path: '/checkout', ancestors: [], root_record: Yodel::Page.all_for_site(site).first)
+      html Yodel::Layout.first(name: 'Checkout').render_with_controller(self)
+    end
+    
+    def finish
+      session['cart'] = {}
+      @page = OpenStruct.new(title: 'Finished', path: '/finish', ancestors: [], root_record: Yodel::Page.all_for_site(site).first)
+      html Yodel::Layout.first(name: 'Finish').render_with_controller(self)
     end
     
     def add_to_cart
@@ -45,5 +56,14 @@ module Yodel
       session['cart'] = cart
       response.redirect '/cart'
     end
+    
+    
+    private
+      def build_products_hash
+        @products = {}
+        (session['cart'] || {}).each do |product_id, count|
+          @products[Yodel::Product.first(id: product_id)] = count
+        end
+      end
   end
 end

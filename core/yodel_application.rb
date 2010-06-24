@@ -75,6 +75,7 @@ module Yodel
       response = Rack::Response.new
       site = Site.find_by_domain(request.host)
       controller, action, match = Yodel.routes.match_request(request)
+      Yodel.config.logger.info "Request: #{request.url}; handling by #{controller.class.name}"
       
       unless controller.nil? || site.nil?
         controller.handle_request(request, response, site, action)

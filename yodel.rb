@@ -11,6 +11,7 @@ require 'pathname'
 require 'hpricot'
 require 'ostruct'
 require 'builder'
+require 'logger'
 require 'erubis'
 require 'json'
 require 'rack'
@@ -19,3 +20,5 @@ require 'rack/contrib'
 # Yodel
 require File.join(File.dirname(__FILE__), 'core', 'config')
 require File.join(File.dirname(__FILE__), 'core', 'yodel_application')
+Yodel.config.logger = Logger.new('yodel.log')
+Yodel.config.sev_threshold = Logger::DEBUG

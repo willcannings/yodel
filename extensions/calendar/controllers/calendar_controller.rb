@@ -14,6 +14,12 @@ module Yodel
         @events = @calendar.children.sort_by {|event| event.start_date}
       end
       
+      ics do
+        RiCal.Calendar do |calendar|
+          @events.each {|event| event.export_to_calendar(calendar)}
+        end.to_s
+      end
+      
       @months = CalendarMonths.new(@events).months
       super
     end

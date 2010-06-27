@@ -3,6 +3,10 @@ class HTML < Text
     # TODO: split out html tags, then do a normal word split
     []
   end
+  
+  def to_text
+    Hpricot(self).search('text()').join(' ')
+  end
 end
 
 class HTMLCode < Code

@@ -10,6 +10,6 @@ module Yodel
     
     def root_calendar
       parent
-    end
+    end    
   end
 end

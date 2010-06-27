@@ -54,4 +54,9 @@ Yodel.mime_types do
     extensions 'jpeg', 'jpg'
     mime_types 'image/jpeg'
   end
+  
+  mime_type :ics do
+    extensions 'ics'
+    mime_types 'text/calendar'
+  end
 end

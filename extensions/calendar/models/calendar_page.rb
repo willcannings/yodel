@@ -10,6 +10,6 @@ module Yodel
     
     def root_calendar
       self
-    end
+    end    
   end
 end

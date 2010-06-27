@@ -17,6 +17,10 @@ module Yodel
       @body_prefix ||= prefix
     end
     
+    def self.default_redirect(path=nil)
+      @default_redirect ||= path
+    end
+    
     def self.inherited(child)
       super(child)
       child.instance_variable_set('@send_to', @send_to)
@@ -25,16 +29,18 @@ module Yodel
       child.instance_variable_set('@body_prefix', @body_prefix)
     end
     
-    def send
-      # request.referer will be HTTP_REFERER or '/' if it doesn't exist
-      redirect_to_address = request.referer
+    def send_mail
+      settings = self.class
       if params.has_key?('redirect_to')
-        unless params['redirect_to'].empty?
-          redirect_to_address = params.delete('redirect_to')
-        else
-          params.delete('redirect_to')
-        end
+        redirect_to_address = params.delete('redirect_to')
+      else
+        redirect_to_address = settings.default_redirect
       end
+      
+      # remove unnecessary fields
+      params.delete('glob')
+      params.delete('format')
+      params.delete('submit')
       
       # we expect all form items to have values responding to to_s (i.e no files)
       form_content = params.collect do |key, value|
@@ -42,10 +48,10 @@ module Yodel
       end.join("\n")
       
       Mail.deliver do
-        subject self.class.subject
-        from    self.class.send_from
-        to      self.class.send_to
-        body    "#{self.class.body_prefix}\n\n#{form_content}"
+        subject settings.subject
+        from    settings.send_from
+        to      settings.send_to
+        body    "#{settings.body_prefix}\n\n#{form_content}"
       end
       
       response.redirect redirect_to_address

@@ -16,7 +16,7 @@ module Yodel
         models = Set.new
         @handles.each do |model|
           models << model
-          model.descendents.each {|child| models << child}
+          model.descendants.each {|child| models << child}
         end
         @controller_models = models.to_a.select {|model| model.creatable?}
       end

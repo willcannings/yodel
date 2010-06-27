@@ -140,25 +140,25 @@ module Yodel
       else
         # conditional assignment will trigger when a value is nil. since this
         # is an acceptable value for child types, we check if the types have
-        # been defined yet, and if so return, otherwise assign descendents of
+        # been defined yet, and if so return, otherwise assign descendants of
         # this type by default. contrast to:
-        # @allowed_child_types ||= descendents
+        # @allowed_child_types ||= descendants
         # the list is ORd with an empty list so enumeration can be guaranteed
         if defined?(@allowed_child_types)
           @allowed_child_types || []
         else
-          @allowed_child_types = self_and_descendents
+          @allowed_child_types = self_and_descendants
         end
       end
     end
     
-    def self.allowed_child_types_and_descendents
-      if !@allowed_child_types_and_descendents
-        @allowed_child_types_and_descendents = allowed_child_types.collect do |child_type|
-          [child_type, *child_type.descendents]
+    def self.allowed_child_types_and_descendants
+      unless @allowed_child_types_and_descendants
+        @allowed_child_types_and_descendants = allowed_child_types.collect do |child_type|
+          [child_type, *child_type.descendants]
         end.flatten
       end
-      @allowed_child_types_and_descendents
+      @allowed_child_types_and_descendants
     end
     
     

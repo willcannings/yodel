@@ -3,11 +3,11 @@
   <a href="#" onclick="loadRecord('<%= @record.class.controller.path_and_action_for(:show, id: @record.id).path %>'); return false;"><%= @record.name %></a>
   <a href="#" class="delete" onclick="destroyRecord('<%= @record.name %>', '<%= @record.class.controller.path_and_action_for(:destroy, id: @record.id).path %>'); return false;"><img src="/admin/images/delete.png"></a>
 
-  <% if @record.class.allowed_child_types_and_descendents.size > 0 %>
-    <a href="#" onclick="newRecord('<%= @record.class.allowed_child_types_and_descendents.first.name.demodulize.underscore %>', '<%= @record.class.allowed_child_types_and_descendents.first.controller.path_and_action_for(:create).path %>', '<%= @record.id %>'); return false;" class="new_child"><img src="/admin/images/add.png"></a>
-    <% if @record.class.allowed_child_types_and_descendents.size > 1 %>
+  <% if @record.class.allowed_child_types_and_descendants.size > 0 %>
+    <a href="#" onclick="newRecord('<%= @record.class.allowed_child_types_and_descendants.first.name.demodulize.underscore %>', '<%= @record.class.allowed_child_types_and_descendants.first.controller.path_and_action_for(:create).path %>', '<%= @record.id %>'); return false;" class="new_child"><img src="/admin/images/add.png"></a>
+    <% if @record.class.allowed_child_types_and_descendants.size > 1 %>
       <select class="record_types">
-        <% @record.class.allowed_child_types_and_descendents.each do |model| %>
+        <% @record.class.allowed_child_types_and_descendants.each do |model| %>
           <option value="<%= model.name.demodulize.underscore %>" href="<%= model.controller.path_and_action_for(:create).path %>"><%= model.name.demodulize.underscore.humanize.titleize %></option>
         <% end %>
       </select>

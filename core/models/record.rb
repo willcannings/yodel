@@ -7,8 +7,8 @@ module Yodel
     extend Yodel::Searchable
     set_collection_name 'record'
     
-    def self.self_and_descendents
-      [self] + self.descendents
+    def self.self_and_descendants
+      [self] + self.descendants
     end
     
     # sharding can be performed on site_id's
@@ -16,7 +16,7 @@ module Yodel
     ensure_index 'site_id'
     
     def self.all_for_site(site, conditions={})
-      records = self.all({site_id: site.id}.merge(conditions)) + self.descendents.collect {|child| child.all_for_site(site, conditions)}.flatten
+      records = self.all({site_id: site.id}.merge(conditions)) + self.descendants.collect {|child| child.all_for_site(site, conditions)}.flatten
       if sort_by
         records.sort_by {|record| record.send(sort_by)}
       else
@@ -30,7 +30,7 @@ module Yodel
     
     def self.first_for_site(site, conditions={})
       record = self.first({site_id: site.id}.merge(conditions))
-      children = self.descendents
+      children = self.descendants
       
       while !record && !children.empty?
         child = children.shift

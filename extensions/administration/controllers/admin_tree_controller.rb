@@ -26,10 +26,10 @@ module Yodel
       
       models = Set.new
       models << @handles.first
-      @handles.first.descendents.each {|model| models << model}
+      @handles.first.descendants.each {|model| models << model}
       @handles.first.allowed_child_types.each do |model|
         models << model
-        model.descendents.each {|child_type| models << child_type}
+        model.descendants.each {|child_type| models << child_type}
       end
       models.to_a.select {|model| model.creatable?}
     end
@@ -40,7 +40,7 @@ module Yodel
     
     def self.first_creatable_root_type
       if !@first_creatable_root_type
-        root_type.self_and_descendents.each do |type|
+        root_type.self_and_descendants.each do |type|
           if type.creatable?
             @first_creatable_root_type = type
             break

@@ -6,7 +6,7 @@ module Yodel
     creatable
     
     # core page attributes
-    key :permalink, String, display: false, required: true, unique: true, index: true, searchable: false
+    key :permalink, String, display: false, required: true, index: true, searchable: false # unique: true not required because assign_permalink guarantees uniqueness
     key :title, String, required: true
     key :content, HTML
     

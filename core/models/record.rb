@@ -63,6 +63,9 @@ module Yodel
       # we don't need to store which site the record belongs to
       hash.delete('site_id')
       
+      # or the search keywords that are generated
+      hash.delete('yodel_search_keywords') if hash.has_key?('yodel_search_keywords')
+      
       # attributes starting with an underscore are private
       hash.delete_if {|key, value| key.start_with? '_'}
       
@@ -78,7 +81,8 @@ module Yodel
         
         if key.end_with?('_id')
           hash.delete(key)
-          hash[key.gsub('_id', '')] = value
+          value_key = key.gsub('_id', '')
+          hash[value_key] = value unless hash.has_key?(value_key)
         end
         
         # hack to get around mongo mapper mapping all dates to time objects...

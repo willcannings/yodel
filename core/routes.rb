@@ -1,5 +1,6 @@
 module Yodel
   class RouteSet
+    attr_reader :routes, :sorted
     def initialize
       @routes = []
       @sorted = false
@@ -12,8 +13,8 @@ module Yodel
     def sort_routes!
       last = @routes.select(&:last?).first
       @routes.delete(last) if !last.nil?
-      @routes = @routes.sort_by {|path, method, controller, action| -path.to_s.length}
-      @routes << last if !last.nil?
+      @routes = @routes.sort_by {|route| -route.path.to_s.length}
+      @routes << last unless last.nil?
       @sorted = true
     end
     

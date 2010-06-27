@@ -61,6 +61,7 @@ module Yodel
       # for simplicity we move the uploaded file (from /tmp) rather than copying
       FileUtils.mkpath directory_path
       FileUtils.mv(temp_path, path)
+      FileUtils.chmod(0664, path)
     end
   end
   

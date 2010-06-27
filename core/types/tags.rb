@@ -1,0 +1,2 @@
+class Tags < String
+end

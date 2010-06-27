@@ -16,6 +16,7 @@ require 'logger'
 require 'erubis'
 require 'json'
 require 'rack'
+require 'mail'
 require 'rack/contrib'
 
 # Yodel

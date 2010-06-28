@@ -63,6 +63,11 @@ module Yodel
       FileUtils.mv(temp_path, path)
       FileUtils.chmod(0664, path)
     end
+    
+    def length
+      return 0 unless self.exist?
+      return File.size(path)
+    end
   end
   
   class ImageAttachment < Attachment

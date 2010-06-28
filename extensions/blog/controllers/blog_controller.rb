@@ -24,15 +24,17 @@ module Yodel
           xml.title   @page.title
           xml.link    "rel" => "self", "href" => request.fullpath
           xml.link    "rel" => "alternate", "href" => @page.path
-          xml.id      request.fullpath
+          xml.id      request.url
           xml.updated @page.articles.first.published.strftime "%Y-%m-%dT%H:%M:%SZ" if @page.articles.any?
-          xml.author  site.name
+          xml.author do
+            xml.name site.name
+          end
 
           @page.articles.each do |article|
             xml.entry do
               xml.title   article.title
               xml.link    "rel" => "alternate", "href" => article.path
-              xml.id      article.path
+              xml.id      request.scheme_and_host + article.path
               xml.updated article.published.strftime "%Y-%m-%dT%H:%M:%SZ"
               xml.author  { xml.name article.author.name } if !article.author.nil?
               xml.summary "Post summary"

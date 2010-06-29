@@ -5,7 +5,7 @@ module Yodel
     
     belongs_to :author, class_name: 'Yodel::User', display: true
     key :published, Time, default: lambda { Time.now }
-    key :tags, String
+    key :tags, Tags
     image :image, article: '553x232'
     attachment :attachment
 

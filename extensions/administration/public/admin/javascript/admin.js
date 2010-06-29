@@ -157,7 +157,7 @@ function loadRecordObject(record, type, form) {
   $H(record).each(function(pair) {
     element_id = type + '_' + pair.key;
     
-    if(pair.value.constructor.toString().indexOf('Array') != -1) {
+    if(pair.value && pair.value.constructor.toString().indexOf('Array') != -1) {
       pair.value.each(function(associated_id) {
         $(element_id + '_' + associated_id).checked = true;
       })
@@ -175,7 +175,7 @@ function loadRecordObject(record, type, form) {
       }
     }
   });
-  
+
   form.select('.html_field').each(function(field) {
     eval(field.id + '_editor.pull()');
   });

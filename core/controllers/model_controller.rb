@@ -110,6 +110,13 @@ module Yodel
           values.delete(key.name.to_s)
         end
         
+        # handle tags specially
+        self.class.model.keys.values.each do |key|
+          next unless key.type && key.type.ancestors.include?(Tags)
+          record.send("#{key.name}=", Tags.from_string(values[key.name.to_s]))
+          values.delete(key.name.to_s)
+        end
+        
         # ensure HTML is in the format we're expecting
         self.class.model.keys.values.each do |key|
           next unless key.type && key.type.ancestors.include?(HTML)

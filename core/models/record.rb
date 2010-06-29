@@ -48,6 +48,7 @@ module Yodel
       self._id.to_s
     end
     
+    # FIXME: this needs to be extracted out to the different key types?
     def self.cleanse_hash(hash)
       # for readability rename '_id' to 'id',
       # and '_type' to 'type'
@@ -79,10 +80,16 @@ module Yodel
         hash[key] = cleanse_hash(value) if value.is_a?(Hash)
         hash[key] = value.force_encoding("UTF-8") if value.is_a?(String)
         
+        if self.keys[key.to_sym].try(:type) && self.keys[key.to_sym].type.ancestors.include?(Tags)
+          hash[key] = Tags.new(value).to_s
+          next
+        end
+        
         if key.end_with?('_id')
           hash.delete(key)
           value_key = key.gsub('_id', '')
           hash[value_key] = value unless hash.has_key?(value_key)
+          next
         end
         
         # hack to get around mongo mapper mapping all dates to time objects...
@@ -102,6 +109,7 @@ module Yodel
             hash[key + '_hour'] = value.localtime.hour
             hash[key + '_min']  = value.localtime.min
           end
+          next
         end
         
         # has_many associations stored in an array need

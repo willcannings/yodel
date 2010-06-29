@@ -134,6 +134,10 @@ module Yodel
       "<input type='checkbox' name='#{name}' id='#{id}' #{'checked' if value}>"
     end
     
+    def html_for_tags_key_and_value(model, key, name, id, value)
+      "<input type='text' name='#{name}' value='#{value}' id='#{id}'>"
+    end
+    
     def html_for_date_key_and_value(model, key, name, id, value)
       "<img src='/admin/images/calendar.png' id='#{id}_trigger' class='calendar_trigger'>
       <input type='text' name='#{name}' value='#{value}' id='#{id}' class='date' readonly='readonly'>

@@ -4,7 +4,7 @@ class Tags < Array
   end
   
   def self.from_string(tags)
-    Tags.new(tags.split(',').map(&:strip).uniq)
+    Tags.new(tags.split(',').map(&:strip).reject(&:blank?).uniq)
   end
   
   def to_s

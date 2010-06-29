@@ -75,7 +75,7 @@ module Yodel
       super(file)
       
       # crop to the required sizes
-      sizes = record.associations[attachment_name].query_options[:sizes]
+      sizes = record.associations[attachment_name].options[:sizes]
       return if sizes.nil? || sizes.empty?
       
       ImageScience.with_image(path.to_s) do |img|

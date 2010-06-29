@@ -78,9 +78,8 @@ module Yodel
         self.class.model.associations.values.each do |association|
           # attachments are handled using mass assignment
           next if association.type == :one && association.klass.ancestors.include?(Yodel::Attachment)
-          next unless association.query_options[:display] || association.name == :parent
+          next unless association.options[:display] || association.name == :parent
           
-          # FIXME: only handling belong_to associations for now
           if association.type == :belongs_to
             new_value = values[association.name.to_s]
             if new_value
@@ -91,6 +90,15 @@ module Yodel
               end
             end
             
+            values.delete(association.name.to_s)
+          elsif association.type == :many
+            has_many_assoc = record.send(association.name)
+            has_many_assoc.nullify
+            unless values[association.name.to_s].nil?
+              values[association.name.to_s].each do |assoc_id, val|
+                has_many_assoc << Yodel::Record.find(assoc_id)
+              end
+            end
             values.delete(association.name.to_s)
           end
         end

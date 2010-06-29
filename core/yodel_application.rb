@@ -43,6 +43,7 @@ module Yodel
       require File.join(File.dirname(__FILE__), 'models')
       require File.join(File.dirname(__FILE__), 'extensions')
       require File.join(File.dirname(__FILE__), 'request')
+      require File.join(File.dirname(__FILE__), 'association_options')
       
       # by default, attachments are served from the public folder in the root of the app
       Yodel.use_middleware do |app|

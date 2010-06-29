@@ -9,7 +9,7 @@ module Yodel
         tabs << nil
 
         keys.each {|key| @tabs << key.options[:tab]}
-        associations.each {|assoc| @tabs << assoc.query_options[:tab]}
+        associations.each {|assoc| @tabs << assoc.options[:tab]}
         @tabs = tabs.to_a
       end
       

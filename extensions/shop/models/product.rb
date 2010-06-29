@@ -14,6 +14,10 @@ module Yodel
       'Product: ' + title
     end
     
+    def name
+      "#{self.title} ($#{"%.2f" % self.price})"
+    end
+    
     def root_shop
       parent.parent
     end

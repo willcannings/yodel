@@ -17,8 +17,8 @@ module Yodel
           tabs[tab_name] << "<li><label>" << key.name.humanize << ":</label><div>" << html_for_key(model, key) << "</div></li>"
         end
       end
-      model.class.associations.values.select {|a| a.query_options[:display]}.collect do |association|
-        tab_name = association.query_options[:tab]
+      model.class.associations.values.select {|a| a.options[:display]}.collect do |association|
+        tab_name = association.options[:tab]
         if !tabs[tab_name]
           tabs[tab_name] = "<ul class='#{tab_name ? 'tab_content' : 'main_content'}' id='#{model.class.name.demodulize.underscore}_#{(tab_name || 'main').underscore}_content'>"
         end
@@ -58,7 +58,7 @@ module Yodel
     end
     
     def html_for_association(model, association)
-      return unless association.query_options[:display]
+      return unless association.options[:display]
       name = name_for_key(model, association)
       id   = id_for_name(name)
 
@@ -66,6 +66,8 @@ module Yodel
         return html_for_belongs_to_association(model, association, name, id)
       elsif association.type == :one && association.klass.ancestors.include?(Yodel::Attachment)
         return html_for_attachment(model, association, name, id)
+      elsif association.type == :many
+        return html_for_has_many_association(model, association, name, id)
       end
       
       # only belongs_to is supported for now
@@ -175,7 +177,7 @@ module Yodel
     # associations to other records
     def html_for_belongs_to_association(model, association, name, id)
       html = "<select name='#{name}' id='#{id}'>"
-      if !association.query_options[:required]
+      if !association.options[:required]
         html << "<option value=''>None</option>"
       end
       association.klass.all(site_id: model.site_id).each do |record|
@@ -187,6 +189,16 @@ module Yodel
     def html_for_attachment(model, association, name, id)
       "<input type='file' name='#{name}' id='#{id}'>
        <p id='#{id}_name' class='upload_name'>#{model.send(association.name).try(:file_name)}</p>"
+    end
+    
+    def html_for_has_many_association(model, association, name, id)
+      field_name = id_for_name(name_for_key(model, model.keys[association.options[:in]]))
+      #field_name = association.options[:in].to_s
+      html = "<ul class='has_many'>"
+      association.klass.all(site_id: model.site_id).each do |record|
+        html << "<li><input type='checkbox' name='#{name}[#{record._id.to_s}]' value='1' id='#{field_name}_#{record._id.to_s}'>#{record.name}</li>"
+      end
+      html << "</ul>"
     end
   end
 end

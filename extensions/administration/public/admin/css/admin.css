@@ -86,6 +86,8 @@ article {
   right: 0px;
 }
 
+
+  /* list of records */
   aside.items {
     position: fixed;
     top: 130px;
@@ -253,6 +255,14 @@ article {
       color: #555;
     }
   
+  
+  
+  
+  
+  
+  
+  
+  /* main form */
   section {
     position: fixed;
     top: 130px;
@@ -260,7 +270,7 @@ article {
     bottom: 0px;
     left: 410px;
     overflow: auto;
-    padding: 0px 30px 30px 0px;
+    padding: 0px 30px 60px 0px;
   }
   
   section.has_sidebar {
@@ -394,6 +404,25 @@ article {
       border: 1px solid rgba(73, 127, 185, 0.9);
     }
 
+    section .upload_name {
+      font-size: 12px;
+      color: #333;
+    }
+
+    section .has_many {
+      border: 1px solid #aaa;
+      height: 200px;
+      overflow: auto;
+      width: 100%;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+    }
+    
+      section .has_many li {
+        padding: 15px 0px 0px 15px;
+      }
+
     section input.submit, section input.cancel {
       width: auto;
       display: block;
@@ -420,10 +449,12 @@ article {
       opacity: 0.5;
     }
     
-    section .upload_name {
-      font-size: 12px;
-      color: #333;
-    }
+  
+  
+  
+  
+  
+  
   
     /* side bar */
     section.no_sidebar aside {

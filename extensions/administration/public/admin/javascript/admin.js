@@ -82,6 +82,9 @@ function resetFormValues(form) {
   form.select('select').each(function(menu) {
     menu.selectedIndex = -1;
   });
+  form.select('.has_many li input').each(function(associated) {
+    associated.checked = false;
+  });
 }
 
 
@@ -154,7 +157,11 @@ function loadRecordObject(record, type, form) {
   $H(record).each(function(pair) {
     element_id = type + '_' + pair.key;
     
-    if(typeof(pair.value) == 'object' && pair.value) {
+    if(pair.value.constructor.toString().indexOf('Array') != -1) {
+      pair.value.each(function(associated_id) {
+        $(element_id + '_' + associated_id).checked = true;
+      })
+    } else if(typeof(pair.value) == 'object' && pair.value) {
       if(pair.value.file_name) {
         if($(element_id + '_name'))
           $(element_id + '_name').innerHTML = pair.value.file_name;

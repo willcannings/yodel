@@ -103,6 +103,14 @@ module Yodel
             hash[key + '_min']  = value.localtime.min
           end
         end
+        
+        # has_many associations stored in an array need
+        # to have ObjectID's converted to strings
+        if value.is_a?(Array)
+          hash[key] = value.collect do |val|
+            val.is_a?(BSON::ObjectID) ? val.to_s : val
+          end
+        end
       end
       
       hash

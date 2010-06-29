@@ -1,22 +1,25 @@
 module Yodel
   class BlogController < PageController
     def show
-      @articles = @page.articles
-
       if params['tag']
-        @articles.reject! {|article| !article.has_tag params['tag']}
+        @articles = @page.children.all(tags: params['tag']).sort_by{|article| article.published}.reverse
+
       elsif params['month'] && params['year']
         # FIXME: optimise for an actual date search (does Mongo even support this!?)
+        @articles = @page.children.all.sort_by{|article| article.published}.reverse
         month = params['month'].to_i
         year = params['year'].to_i
         @articles.reject! do |article|
           article.published.month != month || article.published.year != year
         end
+      else
+        @articles = @page.children.all.sort_by{|article| article.published}.reverse
       end
       
       # render html as a normal page
       super
       
+      # FIXME: work out why this is always being run even when the format isn't atom
       # potential atom feed for the blog
       atom do |xml|
         xml.instruct!

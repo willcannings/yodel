@@ -24,13 +24,5 @@ module Yodel
     def find_layout
       self.blog.article_layout
     end
-    
-    def all_tags
-      (self.tags || '').split(',').collect {|tag| tag.strip}.uniq
-    end
-
-    def has_tag(tag)
-      all_tags.include?(tag)
-    end
   end
 end

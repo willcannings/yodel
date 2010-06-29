@@ -10,25 +10,17 @@ module Yodel
       '/admin/images/blog_icon.png'
     end
     
-    def articles
-      @articles ||= children.sort_by{|article| article.published}.reverse
-    end
-    
     def blog
       self
     end
 
     def all_article_months
-      counts = {}
+      counts = Hash.new(0)
 
       # generate a count of articles for each month
       children.each do |child|
         date = child.published.at_beginning_of_month
-        if counts.key?(date)
-          counts[date] += 1
-        else
-          counts[date] = 1
-        end
+        counts[date] += 1
       end
 
       # collect the months into an array of counted values
@@ -37,16 +29,12 @@ module Yodel
     end
 
     def all_article_tags
-      counts = {}
+      counts = Hash.new(0)
 
       # count the number of articles each tag appears in
       children.each do |child|
-        child.all_tags.each do |tag|
-          if counts.key?(tag)
-            counts[tag] += 1
-          else
-            counts[tag] = 1
-          end
+        child.tags.each do |tag|
+          counts[tag] += 1
         end
       end
 

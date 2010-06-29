@@ -446,7 +446,7 @@ Calendar.prototype = {
     this.container = new Element('div')
     this.container.addClassName('calendar')
     if (this.isPopup) {
-      this.container.setStyle({ position: 'absolute', display: 'none' })
+      this.container.setStyle({ position: 'fixed', display: 'none' })
       this.container.addClassName('popup')
     }
     this.container.appendChild(table)
@@ -521,8 +521,17 @@ Calendar.prototype = {
   // Shows the Calendar at the coordinates of the provided element
   showAtElement: function(element)
   {
-    var pos = Position.cumulativeOffset(element)
-    this.showAt(pos[0], pos[1])
+    var pos = Element.viewportOffset(element);
+    var width = this.container.getWidth();
+    var height = this.container.getHeight();
+    
+    /* constrain within the bounds of the viewport */
+    var x = Math.max(pos.left, 0);
+    x = Math.min(document.viewport.getWidth() - width, pos.left);
+    var y = Math.max(pos.top, 0);
+    y = Math.min(document.viewport.getHeight() - height, pos.top);
+    
+    this.showAt(x, y);
   },
 
   // Hides the Calendar

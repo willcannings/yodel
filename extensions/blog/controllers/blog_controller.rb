@@ -6,6 +6,7 @@ module Yodel
       if params['tag']
         @articles.reject! {|article| !article.has_tag params['tag']}
       elsif params['month'] && params['year']
+        # FIXME: optimise for an actual date search (does Mongo even support this!?)
         month = params['month'].to_i
         year = params['year'].to_i
         @articles.reject! do |article|

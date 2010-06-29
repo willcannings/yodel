@@ -10,6 +10,7 @@ module Yodel
     def index
       build_products_hash
       @page = OpenStruct.new(title: 'Cart', path: '/cart', ancestors: [], root_record: Yodel::Page.all_for_site(site).first)
+      @just_added = Yodel::Product.first(id: session.delete('just_added'))
       html Yodel::Layout.first(name: 'Cart').render_with_controller(self)
     end
     
@@ -36,6 +37,7 @@ module Yodel
         cart[product.id] = 1
       end
       
+      session['just_added'] = product._id.to_s
       session['cart'] = cart
       response.redirect '/cart'
     end

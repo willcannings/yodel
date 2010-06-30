@@ -4,11 +4,6 @@ module Yodel
     include Yodel::AdminFormHelper
     before_filter :admin_required
     
-    def initialize(request, response, site)
-      super(request, response, site)
-      @conditions = {}
-    end
-    
     def index
       html do
         render_file File.join(File.dirname(__FILE__), '..', 'views', 'admin.html.erb')
@@ -43,6 +38,10 @@ module Yodel
     
     def self.conditions(conditions_hash)
       @conditions = conditions_hash
+    end
+    
+    def conditions
+      self.class.instance_variable_get('@conditions') || {}
     end
     
     def self.generate_admin_model_controllers

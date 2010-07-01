@@ -249,7 +249,8 @@ Event.observe(document, 'keyup', function(e){
     isCtrl = false;
   }
 });
-Event.observe(document, 'keydown', function(e){     
+Event.observe(document, 'keydown', function(e){
+  return;
   
   // Debugging
   //alert(e.keyCode);

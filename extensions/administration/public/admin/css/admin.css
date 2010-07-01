@@ -141,6 +141,7 @@ article {
         border-bottom: 1px solid #aaa;
         padding: 0px 10px 0px 10px;
         color: #333;
+        overflow: hidden;
       }
       
       aside.items ul.flat > li {

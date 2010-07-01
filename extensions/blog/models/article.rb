@@ -4,8 +4,8 @@ module Yodel
     creatable
     
     belongs_to :author, class_name: 'Yodel::User', display: true
-    key :published, Time, default: lambda { Time.now }
-    key :tags, Tags
+    key :published, Time, default: lambda { Time.now }, index: true
+    key :tags, Tags, index: true
     image :image, article: '553x232'
     attachment :attachment
 

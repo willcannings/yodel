@@ -1,19 +1,30 @@
 module Yodel
   class BlogController < PageController
+    
+    # FIXME: because we're using associations (children) to retrieve articles, I'm not
+    # sure if we can use the mongo mapper Pagination module (didn't have time to check)
+    # also need to extract ARTICLES_PER_PAGE
+    ARTICLES_PER_PAGE = 5
     def show
-      if params['tag']
-        @articles = @page.children.all(tags: params['tag']).sort_by{|article| article.published}.reverse
-
-      elsif params['month'] && params['year']
-        # FIXME: optimise for an actual date search (does Mongo even support this!?)
-        @articles = @page.children.all.sort_by{|article| article.published}.reverse
-        month = params['month'].to_i
-        year = params['year'].to_i
-        @articles.reject! do |article|
-          article.published.month != month || article.published.year != year
-        end
+      extra_options = {limit: ARTICLES_PER_PAGE}
+      if params['page']
+        extra_options[:skip] = params['page'].to_i * ARTICLES_PER_PAGE
       else
-        @articles = @page.children.all.sort_by{|article| article.published}.reverse
+        extra_options[:skip] = 0
+      end
+      
+      if params['tag']
+        @articles = @page.children.all({tags: params['tag']}.merge(extra_options)).sort_by{|article| article.published}.reverse
+        @total_articles = @page.children.count(tags: params['tag'])
+      elsif params['month'] && params['year']
+        year = params['year'].to_i
+        month = [[params['month'].to_i, 1].max, 12].min # constrain the month between 1..12
+        date_options = {:published.gte => Time.local(year, month, 1), :published.lte => Time.local(year, month + 1, 1)}
+        @articles = @page.children.all(extra_options.merge(date_options)).sort_by{|article| article.published}.reverse
+        @total_articles = @page.children.count(date_options)
+      else
+        @articles = @page.children.all(extra_options).sort_by{|article| article.published}.reverse
+        @total_articles = @page.children.count
       end
       
       # render html as a normal page

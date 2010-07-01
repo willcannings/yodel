@@ -5,7 +5,7 @@ class HTML < Text
   end
   
   def to_text
-    Hpricot(self).search('text()').join(' ').strip
+    Hpricot(self).search('text()').collect(&:to_s).collect(&:strip).join(' ').strip
   end
 end
 

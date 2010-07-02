@@ -5,8 +5,8 @@ module Yodel
 
     key :first_name, String
     key :last_name, String
-    key :emai, Email
-    key :username, String, required: true, index: true
+    key :email, Email, required: true, unique: true # FIXME: needs to be unique over a site only
+    key :username, String, required: true, index: true, unique: true # FIXME: needs to be unique over a site only
     key :password, Password, required: true, searchable: false
     
     def name

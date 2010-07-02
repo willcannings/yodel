@@ -1,12 +1,9 @@
-# re-open the record class and add functionality
-
 module Yodel
   class Record
-    # class methods
     def self.tabs
-      if !@tabs
+      unless @tabs
         tabs = Set.new
-        tabs << nil
+        tabs << nil # TODO: work out why this is necessary?
 
         keys.each {|key| @tabs << key.options[:tab]}
         associations.each {|assoc| @tabs << assoc.options[:tab]}

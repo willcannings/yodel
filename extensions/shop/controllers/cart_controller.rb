@@ -15,6 +15,12 @@ module Yodel
     end
     
     def checkout
+      unless logged_in?
+        session['reason'] = "You must be registered and logged in to purchase from our store. Either log in below, or click <a href='/register'>here</a> to sign up."
+        session['return_to'] = '/checkout'
+        response.redirect '/sign_in'
+        return
+      end
       build_products_hash
       @page = OpenStruct.new(title: 'Checkout', path: '/checkout', ancestors: [], root_record: Yodel::Page.all_for_site(site).first)
       html Yodel::Layout.first(name: 'Checkout').render_with_controller(self)

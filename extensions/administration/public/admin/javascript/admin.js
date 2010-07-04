@@ -239,6 +239,18 @@ document.observe("dom:loaded", function() {
 });
 
 
+/* Date and time clearing functions */
+function clear_time(prefix) {
+  $(prefix + '_date').value = '';
+  $(prefix + '_hour').value = '0';
+  $(prefix + '_min').value = '0';
+}
+
+function clear_date(id) {
+  $(id).value = '';
+}
+
+
 //===================================
 // Command + S for save
 // Author: James Martin

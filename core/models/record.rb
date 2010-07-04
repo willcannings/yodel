@@ -11,6 +11,15 @@ module Yodel
       [self] + self.descendants
     end
     
+    def self.self_and_all_descendants
+      types = Set[self]
+      self.descendants.each do |child|
+        types << child
+        types.merge child.descendants
+      end
+      types.to_a
+    end
+    
     # sharding can be performed on site_id's
     belongs_to :site, class_name: 'Yodel::Site'
     ensure_index 'site_id'

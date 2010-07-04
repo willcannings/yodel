@@ -5,8 +5,8 @@ module Yodel
     page_controller Yodel::EventController
     
     key :byline, String
-    key :start_date, Time, default: lambda { Time.now }
-    key :end_date, Time, default: lambda { Time.now }
+    key :start_date, Time, default: lambda { Time.now }, required: true
+    key :end_date, Time, default: lambda { Time.now }, required: true
     key :location, String
     image :image, event: '382x253'
     

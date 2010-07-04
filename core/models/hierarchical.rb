@@ -18,6 +18,7 @@ module Yodel
       @siblings ||= Record.all parent_id: BSON::ObjectID.from_string(self.parent_id.to_s), order: 'index asc'
     end
     
+    # FIXME: overriding a built in method, should be renamed parents, or ancestor_records or something similar
     def ancestors
       @ancestors ||= [self] + (self.parent.try(:ancestors) || [])
     end

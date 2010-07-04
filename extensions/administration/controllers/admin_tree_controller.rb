@@ -24,14 +24,8 @@ module Yodel
       raise "Admin Tree Controller can only handle a single record type" if @handles.size > 1
       raise "This Admin Tree Controller (#{self.name}) doesn't have a 'handles' clause. You must specify a record type for this controller to handle" if @handles.nil? || @handles.empty?
       
-      models = Set.new
-      models << @handles.first
-      @handles.first.descendants.each {|model| models << model}
-      @handles.first.allowed_child_types.each do |model|
-        models << model
-        model.descendants.each {|child_type| models << child_type}
-      end
-      models.to_a.select {|model| model.creatable?}
+      models = @handles.first.self_and_all_descendants
+      models.select(&:creatable?)
     end
     
     def controller_models

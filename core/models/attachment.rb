@@ -77,10 +77,8 @@ module Yodel
     end
     
     def crop_image
-      puts "CROPPING IMAGES!!!! #{path}"
       sizes = record.associations[attachment_name].options[:sizes]
-      return if sizes.nil? || sizes.empty?
-      puts "Creating: #{sizes.inspect}"
+      return if sizes.nil? || sizes.empty? || !exist?
       ImageScience.with_image(path.to_s) do |img|
         iw, ih = img.width, img.height
         sizes.each do |name, size|

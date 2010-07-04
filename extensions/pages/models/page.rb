@@ -13,7 +13,7 @@ module Yodel
     # behaviour tab
     key :show_in_menus, Boolean, tab: 'Behaviour', default: true
     key :show_in_search, Boolean, tab: 'Behaviour', default: true
-    belongs_to :layout, class: Yodel::Layout, display: true, required: false, tab: 'Behaviour'
+    belongs_to :page_layout, class: Yodel::Layout, display: true, required: false, tab: 'Behaviour'
     
     # SEO tab
     key :description, Text, tab: 'SEO'
@@ -74,8 +74,8 @@ module Yodel
       self.permalink = base_permalink + suffix
     end
     
-    def find_layout
-      self.layout.nil? ? self.parent.find_layout : self.layout
+    def layout
+      self.page_layout.nil? ? self.parent.layout : self.page_layout
     end
     
     def child_page_with_permalink(permalink)

@@ -18,6 +18,14 @@ module Yodel
       'Event: ' + title
     end
     
+    def root_calendar
+      parent.parent
+    end
+    
+    def layout
+      parent.parent.event_layout
+    end
+    
     def export_to_calendar(calendar)
       calendar.event do |event|
         event.summary = self.title

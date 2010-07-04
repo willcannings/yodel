@@ -11,5 +11,9 @@ module Yodel
     def root_video_page
       parent
     end
+    
+    def layout
+      parent.category_layout
+    end
   end
 end

@@ -21,5 +21,9 @@ module Yodel
     def root_shop
       parent.parent
     end
+    
+    def layout
+      parent.parent.product_layout
+    end
   end
 end

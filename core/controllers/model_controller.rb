@@ -151,8 +151,12 @@ module Yodel
           hour_key = key.name.to_s + '_hour'
           min_key = key.name.to_s + '_min'
           
-          time = "#{values[date_key]} #{"%.2u" % values[hour_key].to_i}:#{"%.2u" % values[min_key].to_i}"
-          record.send("#{key.name}=", time)
+          unless values[date_key].nil? || values[date_key].blank? || values[hour_key].nil? || values[hour_key].blank? || values[min_key].nil? || values[min_key].blank?
+            time = "#{values[date_key]} #{"%.2u" % values[hour_key].to_i}:#{"%.2u" % values[min_key].to_i}"
+            record.send("#{key.name}=", time)
+          else
+            record.send("#{key.name}=", nil)
+          end
           
           values.delete(date_key)
           values.delete(hour_key)

@@ -25,7 +25,8 @@ module Yodel
       raise "This Admin Tree Controller (#{self.name}) doesn't have a 'handles' clause. You must specify a record type for this controller to handle" if @handles.nil? || @handles.empty?
       
       models = @handles.first.self_and_all_descendants
-      models.select(&:creatable?)
+      models.each {|model| models += model.allowed_child_types_and_descendants}
+      models.select(&:creatable?).uniq
     end
     
     def controller_models

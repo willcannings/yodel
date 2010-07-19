@@ -14,5 +14,9 @@ module Yodel
     def products
       children
     end
+    
+    def layout
+      parent.category_layout
+    end
   end
 end

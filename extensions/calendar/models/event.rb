@@ -5,8 +5,8 @@ module Yodel
     page_controller Yodel::EventController
     
     key :byline, String
-    key :start_date, Time, default: lambda { Time.now }
-    key :end_date, Time, default: lambda { Time.now }
+    key :start_date, Time, default: lambda { Time.now }, required: true
+    key :end_date, Time, default: lambda { Time.now }, required: true
     key :location, String
     image :image, event: '382x253'
     
@@ -16,6 +16,14 @@ module Yodel
     
     def search_title
       'Event: ' + title
+    end
+    
+    def root_calendar
+      parent.parent
+    end
+    
+    def layout
+      parent.parent.event_layout
     end
     
     def export_to_calendar(calendar)

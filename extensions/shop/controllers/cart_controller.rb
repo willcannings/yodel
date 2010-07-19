@@ -10,17 +10,11 @@ module Yodel
     def index
       build_products_hash
       @page = OpenStruct.new(title: 'Cart', path: '/cart', ancestors: [], root_record: Yodel::Page.all_for_site(site).first)
-      @just_added = Yodel::Product.first(id: session.delete('just_added'))
+      @just_added = Yodel::Record.first(id: session.delete('just_added'))
       html Yodel::Layout.first(name: 'Cart').render_with_controller(self)
     end
     
     def checkout
-      unless logged_in?
-        session['reason'] = "You must be registered and logged in to purchase from our store. Either log in below, or click <a href='/register'>here</a> to sign up."
-        session['return_to'] = '/checkout'
-        response.redirect '/sign_in'
-        return
-      end
       build_products_hash
       @page = OpenStruct.new(title: 'Checkout', path: '/checkout', ancestors: [], root_record: Yodel::Page.all_for_site(site).first)
       html Yodel::Layout.first(name: 'Checkout').render_with_controller(self)
@@ -36,7 +30,7 @@ module Yodel
       cart = session['cart'] || {}
       
       # looking up the product here means we don't allow adding random ID's to the cart list
-      product = Yodel::Product.first(id: params['id'])
+      product = Yodel::Record.first(id: params['id'])
       if cart.has_key?(product.id)
         cart[product.id] += 1
       else
@@ -52,7 +46,7 @@ module Yodel
       cart = session['cart'] || {}
       
       # looking up the product here means we don't allow adding random ID's to the cart list
-      product = Yodel::Product.first(id: params['id'])
+      product = Yodel::Record.first(id: params['id'])
       if cart.has_key?(product.id)
         if cart[product.id] > 0
           cart[product.id] -= 1
@@ -70,7 +64,7 @@ module Yodel
       def build_products_hash
         @products = {}
         (session['cart'] || {}).each do |product_id, count|
-          @products[Yodel::Product.first(id: product_id)] = count
+          @products[Yodel::Record.first(id: product_id)] = count
         end
       end
   end

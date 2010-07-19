@@ -5,8 +5,8 @@ module Yodel
     def show
       page = Yodel::Page.roots_for_site(site).first
       params['glob'].scan(/[^\/]+/) do |component|
-        page = page.child_page_with_permalink(component)
         status(404) and return if page.nil?
+        page = page.child_page_with_permalink(component)
       end
       
       controller = page.page_controller.new(@request, @response, @site)

@@ -2,7 +2,8 @@ module Yodel
   class PageController < Controller
     def show
       @content = @page.content
-      html @page.find_layout.render_with_controller(self)
+      env['yodel.layout'] = @page.layout.name
+      html @page.layout.render_with_controller(self)
       json :content => @page.content, :title => @page.title
     end
   end

@@ -21,7 +21,7 @@ module Yodel
       'News: ' + title
     end
     
-    def find_layout
+    def layout
       self.blog.article_layout
     end
   end

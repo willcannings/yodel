@@ -17,10 +17,6 @@ module Yodel
       @body_prefix ||= prefix
     end
     
-    def self.attachment_1(attachment_1=nil)
-      @attachment_1 ||= attachment_1
-    end    
-    
     def self.default_redirect(path=nil)
       @default_redirect ||= path
     end

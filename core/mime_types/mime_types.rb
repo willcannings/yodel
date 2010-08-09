@@ -35,6 +35,14 @@ Yodel.mime_types do
     end
   end
   
+  mime_type :xml do
+    extensions 'xml'
+    mime_types 'text/xml'
+    builder do
+      Builder::XmlMarkup.new
+    end
+  end
+  
   mime_type :pdf do
     extensions 'pdf'
     mime_types 'application/pdf', 'application/x-pdf'

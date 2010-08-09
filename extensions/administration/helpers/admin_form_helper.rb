@@ -112,11 +112,12 @@ module Yodel
         			  'orderedlist','unorderedlist','|','outdent','indent','|','leftalign',
         			  'centeralign','rightalign','blockjustify','|','undo','redo','n',
         			  'style','|','hr','link','unlink','|','cut','copy','paste','print'],
-        	footer: false,
+        	footer: true,
         	xhtml: true,
         	cssfile: '/admin/css/tinyeditor.css',
         	bodyid: '#{id}_html',
-        	footerclass: 'tefooter'
+        	footerclass: 'tefooter',
+        	toggle:{text:'source',activetext:'wysiwyg',cssclass:'toggle'}
         });
       </script>
       "

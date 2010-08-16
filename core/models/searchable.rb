@@ -13,7 +13,7 @@ module Yodel
           search_terms = Set.new
           self.class.keys.values.each do |key|
             next if key.name.starts_with?('_') || key.options[:searchable] == false || key.type.nil? || !key.type.instance_methods.include?(:search_terms_set)
-            self.send(key.name).search_terms_set.each do |term|
+            (self.send(key.name) || '').search_terms_set.each do |term|
               search_terms << term.downcase
             end
           end

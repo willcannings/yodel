@@ -48,7 +48,7 @@ module Yodel
       # looking up the product here means we don't allow adding random ID's to the cart list
       product = Yodel::Record.first(id: params['id'])
       if cart.has_key?(product.id)
-        if cart[product.id] > 0
+        if cart[product.id] > 1
           cart[product.id] -= 1
         else
           cart.delete(product.id)

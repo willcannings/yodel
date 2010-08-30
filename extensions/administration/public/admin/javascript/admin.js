@@ -162,8 +162,9 @@ function loadRecordObject(record, type, form) {
       })
     } else if(typeof(pair.value) == 'object' && pair.value) {
       if(pair.value.file_name) {
-        if($(element_id + '_name'))
+        if($(element_id + '_name')) {
           $(element_id + '_name').innerHTML = pair.value.file_name;
+        }
       }
       if(pair.value.img_src) {
         if($(element_id + '_img')) {

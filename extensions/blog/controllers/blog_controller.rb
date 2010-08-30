@@ -6,32 +6,31 @@ module Yodel
     # also need to extract ARTICLES_PER_PAGE
     ARTICLES_PER_PAGE = 5
     def show
-      extra_options = {limit: ARTICLES_PER_PAGE}
-      if params['page']
-        extra_options[:skip] = params['page'].to_i * ARTICLES_PER_PAGE
-      else
-        extra_options[:skip] = 0
-      end
+      extra_options = {limit: ARTICLES_PER_PAGE, order: 'published desc'}
+      @page_number = params['page'].to_i
+      extra_options[:skip] = @page_number * ARTICLES_PER_PAGE      
       
       if params['tag']
-        @articles = @page.children.all({tags: params['tag']}.merge(extra_options)).sort_by{|article| article.published}.reverse
-        @total_articles = @page.children.count(tags: params['tag'])
+        @tag = params['tag']
+        @articles = @page.children.all({tags: @tag}.merge(extra_options))
+        @total_articles = @page.children.count(tags: @tag)
       elsif params['month'] && params['year']
-        year = params['year'].to_i
-        month = [[params['month'].to_i, 1].max, 12].min # constrain the month between 1..12
-        date_options = {:published.gte => Time.local(year, month, 1), :published.lte => Time.local(year, month + 1, 1)}
-        @articles = @page.children.all(extra_options.merge(date_options)).sort_by{|article| article.published}.reverse
+        @month = [[params['month'].to_i, 1].max, 12].min # constrain the month between 1..12
+        @year  = params['year'].to_i
+        date_options = {:published.gte => Time.local(@year, @month, 1), :published.lte => Time.local(@year, @month + 1, 1)}
+        @articles = @page.children.all(extra_options.merge(date_options))
         @total_articles = @page.children.count(date_options)
       else
-        @articles = @page.children.all(extra_options).sort_by{|article| article.published}.reverse
+        @articles = @page.children.all(extra_options)
         @total_articles = @page.children.count
       end
+      
+      # helper variables
+      @number_of_pages = (@total_articles.to_f / ARTICLES_PER_PAGE).ceil
       
       # render html as a normal page
       super
       
-      # FIXME: work out why this is always being run even when the format isn't atom
-      # potential atom feed for the blog
       atom do |xml|
         xml.instruct!
 
@@ -66,6 +65,14 @@ module Yodel
           end
         end
       end
+    end
+    
+    def first_page?
+      @page_number == 0
+    end
+    
+    def last_page?
+      @page_number == @number_of_pages - 1
     end
   end
 end

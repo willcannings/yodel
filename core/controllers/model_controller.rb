@@ -162,7 +162,7 @@ module Yodel
           values.delete(hour_key)
           values.delete(min_key)
         end
-
+        
         # handle all other attributes using mass assignment
         if record.update_attributes(values)
           json record: record.to_json_hash

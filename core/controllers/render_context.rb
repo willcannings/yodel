@@ -19,7 +19,8 @@ module Yodel
     def method_missing(name, *args)
       name = name.to_s
     
-      if !name.starts_with?('@')
+      unless name.starts_with?('@')
+        # TODO: method lookup chain; e.g the controller should be able to pass this off to @page, so page models can define methods visible in views
         if @controller.respond_to?(name.to_sym)
           @controller.send(name.to_sym, *args)
         else

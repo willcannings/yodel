@@ -17,11 +17,11 @@ module Yodel
     # TODO: extract boot out to "components" with dependencies; automatically resolve boot order based on deps
     def boot
       # initialise MongoMapper
-      # FIXME: need port here as well
-      if Yodel.config.database_hostname?
-        MongoMapper.connection = Mongo::Connection.new(Yodel.config.database_hostname)
-      end
-      MongoMapper.database = Yodel.config.database || "Yodel"
+      Yodel.config.database_hostname  ||= 'localhost'
+      Yodel.config.database_port      ||= 27017
+      Yodel.config.database           ||= 'Yodel'
+      MongoMapper.connection = Mongo::Connection.new(Yodel.config.database_hostname, Yodel.config.database_port, :slave_ok => true)
+      MongoMapper.database = Yodel.config.database
 
       # assign default values if needed
       Yodel.config.session_secret             ||= "yodel.session"

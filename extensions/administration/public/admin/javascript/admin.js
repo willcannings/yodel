@@ -156,7 +156,6 @@ function processRecord(transport) {
 function loadRecordObject(record, type, form) {
   $H(record).each(function(pair) {
     element_id = type + '_' + pair.key;
-    
     if(pair.value && pair.value.constructor.toString().indexOf('Array') != -1) {
       pair.value.each(function(associated_id) {
         $(element_id + '_' + associated_id).checked = true;
@@ -165,6 +164,11 @@ function loadRecordObject(record, type, form) {
       if(pair.value.file_name) {
         if($(element_id + '_name'))
           $(element_id + '_name').innerHTML = pair.value.file_name;
+      }
+      if(pair.value.img_src) {
+        if($(element_id + '_img')) {
+          $(element_id + '_img').src = pair.value.img_src;
+        }
       }
     } else if(typeof(pair.value) == 'boolean') {
       if($(element_id))

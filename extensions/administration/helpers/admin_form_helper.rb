@@ -65,7 +65,11 @@ module Yodel
       if association.type == :belongs_to
         return html_for_belongs_to_association(model, association, name, id)
       elsif association.type == :one && association.klass.ancestors.include?(Yodel::Attachment)
-        return html_for_attachment(model, association, name, id)
+        if association.klass.ancestors.include?(Yodel::ImageAttachment)
+          return html_for_image_attachment(model, association, name, id)
+        else
+          return html_for_attachment(model, association, name, id)
+        end
       elsif association.type == :many
         return html_for_has_many_association(model, association, name, id)
       end
@@ -204,6 +208,11 @@ module Yodel
     def html_for_attachment(model, association, name, id)
       "<input type='file' name='#{name}' id='#{id}'>
        <p id='#{id}_name' class='upload_name'>#{model.send(association.name).try(:file_name)}</p>"
+    end
+    
+    def html_for_image_attachment(model, association, name, id)
+       "<input type='file' name='#{name}' id='#{id}'>
+         <img id='#{id}_img' class='upload_img'>"
     end
     
     def html_for_has_many_association(model, association, name, id)

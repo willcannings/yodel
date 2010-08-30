@@ -94,7 +94,6 @@ module Yodel
       child.instance_variable_set('@after_filters', @after_filters)
     end
     
-    
     # rendering
     # TODO: possible cleanup: why have extra context and context object; just force callers to construct a context object anyway?
     def render_file(file, context=nil, extra_context={})
@@ -134,7 +133,7 @@ module Yodel
       if block_given?
         mime_type = Yodel.mime_types.type(name)
         raise "Unknown Mime Type: #{name}" if mime_type.nil?
-        @responses[name] = yield(mime_type.create_builder)
+        @responses[name] = block
       elsif args.length >= 1
         @responses[name] = args.first
       else
@@ -150,6 +149,7 @@ module Yodel
       @responses.each do |name, data|
         mime_type = Yodel.mime_types.type(name)
         if mime_type.try(:matches_request?, request) # FIXME: why are we using try here? document or change
+          data = data.call(mime_type.create_builder) if data.is_a? Proc 
           response.write mime_type.process(data)
           response['Content-Type'] = mime_type.default_mime_type
           return

@@ -71,6 +71,8 @@ module Yodel
   end
   
   class ImageAttachment < Attachment
+    key :img_src, String
+    
     def set_file(file)
       super(file)
       crop_image
@@ -91,6 +93,10 @@ module Yodel
             crop.resize(sw, sh) do |resized|
               resized.save resized_image_path(name, false).to_s
             end
+            if name == :admin_thumb
+              self.img_src = self.resized_image_url(:admin_thumb, false)
+              self.save
+            end
           end
         end
       end
@@ -104,12 +110,12 @@ module Yodel
     end
     
     # TODO: relative path from is quite a complex method; we should optimise the whole path system here somehow
-    def relative_resized_image_path(name)
-      resized_image_path(name).relative_path_from(Yodel.config.public_directory)
+    def relative_resized_image_path(name, crop_if_required=true)
+      resized_image_path(name, crop_if_required).relative_path_from(Yodel.config.public_directory)
     end
     
-    def resized_image_url(name)
-       Pathname.new('/').join(relative_resized_image_path(name))
+    def resized_image_url(name, crop_if_required=true)
+       Pathname.new('/').join(relative_resized_image_path(name, crop_if_required))
     end
     
     def method_missing(name, *args)

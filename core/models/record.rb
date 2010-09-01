@@ -167,7 +167,7 @@ module Yodel
     end
     
     def self.image(name, sizes={})
-      class_eval "has_one :#{name}, class: Yodel::ImageAttachment, dependent: :destroy, display: true, sizes: #{sizes.merge({admin_thumb:"100x100"}).inspect}"
+      class_eval "has_one :#{name}, class: Yodel::ImageAttachment, dependent: :destroy, display: true, sizes: #{{admin_thumb:"100x100"}.merge(sizes).inspect}"
       define_attachment_setter(name)
     end
     

@@ -211,7 +211,7 @@ module Yodel
     end
     
     def html_for_image_attachment(model, association, name, id)
-       "<input type='file' name='#{name}' id='#{id}'>
+       "<input type='file' name='#{name}' id='#{id}'> <p id='#{id}_name'></p>
          <img id='#{id}_img' class='upload_img'>"
     end
     

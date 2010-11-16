@@ -102,29 +102,7 @@ module Yodel
     end
     
     def html_for_html_key_and_value(model, key, name, id, value)
-      "<textarea name='#{name}' value='#{value}' id='#{id}' class='html_field'></textarea>
-      <script>
-        var #{id}_editor = new TINY.editor.edit('#{id}',{
-        	id: '#{id}',
-        	width: '100%',
-        	height: 350,
-        	cssclass: 'te',
-        	controlclass: 'tecontrol',
-        	rowclass: 'teheader',
-        	dividerclass: 'tedivider',
-        	controls:['bold','italic','underline','strikethrough', '|',
-        			  'orderedlist','unorderedlist','|','outdent','indent','|','leftalign',
-        			  'centeralign','rightalign','blockjustify','|','undo','redo','n',
-        			  'style','|','hr','link','unlink','|','cut','copy','paste','print'],
-        	footer: true,
-        	xhtml: true,
-        	cssfile: '/admin/css/tinyeditor.css',
-        	bodyid: '#{id}_html',
-        	footerclass: 'tefooter',
-        	toggle:{text:'source',activetext:'wysiwyg',cssclass:'toggle'}
-        });
-      </script>
-      "
+      return "<textarea name='#{name}' value='#{value}' id='#{id}' class='html_field'></textarea>"
     end
     
     def html_for_numeric_key_and_value(model, key, name, id, value)

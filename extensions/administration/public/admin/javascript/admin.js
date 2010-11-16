@@ -182,7 +182,7 @@ function loadRecordObject(record, type, form) {
   });
 
   form.select('.html_field').each(function(field) {
-    eval(field.id + '_editor.pull()');
+    tinyMCE.get(field.id).setContent($F(field.id));
   });
 }
 
@@ -237,7 +237,7 @@ document.observe("dom:loaded", function() {
   $$('form').each(function(form) {
     form.observe('submit', function(event) {
       this.select('.html_field').each(function(field) {
-        eval(field.id + '_editor.post()');
+        $(field.id).value = tinyMCE.get(field.id).getContent();
       });
     })
   })

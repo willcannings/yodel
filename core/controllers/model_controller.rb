@@ -120,27 +120,27 @@ module Yodel
         # ensure HTML is in the format we're expecting
         self.class.model.keys.values.each do |key|
           next unless key.type && key.type.ancestors.include?(HTML)
-          document = Hpricot(values[key.name.to_s] || '')
+          #document = Hpricot(values[key.name.to_s] || '')
           
           # all floating text elements need to be contained in a P tag
-          document.search("/text()").wrap("<p></p>")
+          #document.search("/text()").wrap("<p></p>")
           
           # all divs should be p's
-          document.search("/div").each do |div|
-            p = div.make("<p>#{div.inner_html}</p>")
-            div.parent.replace_child(div, p)
-          end
+          #document.search("/div").each do |div|
+          #  p = div.make("<p>#{div.inner_html}</p>")
+          #  div.parent.replace_child(div, p)
+          #end
           
           # remove styling from tags
-          document.search("/p").each do |p|
-            new_p = p.make("<p>#{p.inner_html}</p>")
-            p.parent.replace_child(p, new_p)
-          end
+          #document.search("/p").each do |p|
+          #  new_p = p.make("<p>#{p.inner_html}</p>")
+          #  p.parent.replace_child(p, new_p)
+          #end
           
           # remove empty p tags
           # TODO
           
-          record.send("#{key.name}=", document.to_html)
+          record.send("#{key.name}=", values[key.name.to_s])
           values.delete(key.name.to_s)
         end
         

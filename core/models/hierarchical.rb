@@ -16,7 +16,7 @@ module Yodel
     
     def siblings
       unless self.parent_id.nil? || self.parent_id.blank?
-        @siblings ||= Record.all parent_id: BSON::ObjectID.from_string(self.parent_id.to_s), order: 'index asc'
+        @siblings ||= Record.all parent_id: BSON::ObjectId.from_string(self.parent_id.to_s), order: 'index asc'
       else
         # FIXME: once proper STI is implemented, we can actually return back siblings
         @siblings ||= [] #Record.all parent_id: nil order: 'index asc'

@@ -84,8 +84,9 @@ module Yodel
       # documents, remove "_id" from all keys, and change
       # date and time values in to a format suitable for
       # clients to read appropriately
-      hash.each do |key, value|
-        hash[key] = value.to_s if value.is_a?(BSON::ObjectID)
+      hash.keys.each do |key|
+        value = hash[key]
+        hash[key] = value.to_s if value.is_a?(BSON::ObjectId)
         hash[key] = cleanse_hash(value) if value.is_a?(Hash)
         hash[key] = value.force_encoding("UTF-8") if value.is_a?(String)
         
@@ -125,7 +126,7 @@ module Yodel
         # to have ObjectID's converted to strings
         if value.is_a?(Array)
           hash[key] = value.collect do |val|
-            val.is_a?(BSON::ObjectID) ? val.to_s : val
+            val.is_a?(BSON::ObjectId) ? val.to_s : val
           end
         end
       end

@@ -39,8 +39,9 @@ module Yodel
     end
     
     # TODO: make sure this works?
-    def paragraph(index)
-      paragraphs = Hpricot(content).search('/p')
+    def paragraph(index, field=:content)
+      text = self[field]
+      paragraphs = Hpricot(text).search('/p')
       unless paragraphs.nil? || paragraphs[index].nil?
         paragraphs[index].inner_html
       else
@@ -48,8 +49,9 @@ module Yodel
       end
     end
     
-    def paragraphs_from(index)
-      paragraphs = Hpricot(content).search('/p')
+    def paragraphs_from(index, field=:content)
+      text = self[field]
+      paragraphs = Hpricot(text).search('/p')
       unless paragraphs.nil? || paragraphs[index..-1].nil?
         paragraphs[index..-1].collect {|p| p.to_s}.join('')
       else

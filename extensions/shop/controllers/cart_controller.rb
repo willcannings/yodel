@@ -15,7 +15,11 @@ module Yodel
     end
     
     def checkout
-      build_products_hash
+      if params['product']
+        build_products_from_form
+      else
+        build_products_hash
+      end
       @page = OpenStruct.new(title: 'Checkout', path: '/checkout', ancestors: [], root_record: Yodel::Page.all_for_site(site).first)
       html Yodel::Layout.first(name: 'Checkout').render_with_controller(self)
     end
@@ -65,6 +69,13 @@ module Yodel
         @products = {}
         (session['cart'] || {}).each do |product_id, count|
           @products[Yodel::Record.first(id: product_id)] = count
+        end
+      end
+      
+      def build_products_from_form
+        @products = {}
+        params['product'].each do |product_id, count|
+          @products[Yodel::Record.first(id: product_id)] = count.to_i
         end
       end
   end

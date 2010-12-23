@@ -22,6 +22,6 @@ module Yodel
     
     def layout
       parent.parent.video_layout
-    end
+    end    
   end
 end

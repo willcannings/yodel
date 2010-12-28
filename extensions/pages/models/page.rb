@@ -38,7 +38,6 @@ module Yodel
       title
     end
     
-    # TODO: make sure this works?
     def paragraph(index, field=:content)
       text = self[field]
       paragraphs = Hpricot(text).search('/p')
@@ -88,6 +87,14 @@ module Yodel
     def path
       # the first ancestor is the root page (we ignore its permalink since it is accessed by '/')
       '/' + ancestors.reverse[1..-1].collect(&:permalink).join('/')
+    end
+    
+    def first_parent(type)
+      @parent_page = self
+      until @parent_page.is_a?(type) || @parent_page.nil?
+        @parent_page = @parent_page.parent
+      end
+      @parent_page
     end
     
     # page controller

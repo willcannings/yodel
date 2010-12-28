@@ -14,15 +14,20 @@ module Yodel
         @tag = params['tag']
         @articles = @page.children.all({tags: @tag}.merge(extra_options))
         @total_articles = @page.children.count(tags: @tag)
+        @page_params = "tag=#{params['tag']}&"
+        
       elsif params['month'] && params['year']
         @month = [[params['month'].to_i, 1].max, 12].min # constrain the month between 1..12
         @year  = params['year'].to_i
         date_options = {:published.gte => Time.local(@year, @month, 1), :published.lte => Time.local(@year, @month + 1, 1)}
         @articles = @page.children.all(extra_options.merge(date_options))
         @total_articles = @page.children.count(date_options)
+        @page_params = "year=#{params['year']}&month=#{params['month']}&"
+        
       else
         @articles = @page.children.all(extra_options)
         @total_articles = @page.children.count
+        @page_params = ''
       end
       
       # helper variables

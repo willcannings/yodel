@@ -31,7 +31,7 @@ module Yodel
     # whenever the password is updated, re-hash it
     before_save :hash_password
     def hash_password
-      return unless password_changed? && !password_salt.empty?
+      return unless password_changed? && !password_salt.nil? && !password_salt.empty?
       self.password = hash(self.password)
     end
     

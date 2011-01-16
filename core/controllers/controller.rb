@@ -14,6 +14,7 @@ module Yodel
       run_before_filters(action)
       send(action)
       run_after_filters(action)
+      flash.finalize
     end
     
     # basic environment accessors
@@ -39,6 +40,10 @@ module Yodel
     
     def session
       @env['rack.session'] ||= {}
+    end
+    
+    def flash
+      @flash ||= Yodel::Flash.new(session)
     end
     
     

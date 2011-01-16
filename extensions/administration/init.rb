@@ -1,3 +1,4 @@
+require 'digest'
 Yodel.config.admin_tabs = []
 
 require File.join(File.dirname(__FILE__), 'models', 'record')

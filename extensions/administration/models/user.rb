@@ -36,7 +36,6 @@ module Yodel
     end
     
     def passwords_match?(password)
-      puts "Comparing #{self.password} to #{hash(password)}: #{password}, #{password_salt}"
       self.password == hash(password) ? self : nil
     end
 

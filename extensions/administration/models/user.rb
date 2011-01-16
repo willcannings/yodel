@@ -1,6 +1,8 @@
 module Yodel
   class User < Hierarchical
     SALT_ALPHABET = (65..90).to_a
+    SALT_LENGTH = 40
+    PASS_LENGTH = 8
     allowed_child_types nil
     creatable
 
@@ -23,7 +25,7 @@ module Yodel
     before_create :create_salt_and_hash_password
     def create_salt_and_hash_password
       self.password_salt = ''
-      40.times {self.password_salt += SALT_ALPHABET.sample.chr}
+      SALT_LENGTH.times {self.password_salt += SALT_ALPHABET.sample.chr}
       self.password_salt = Digest::SHA1.hexdigest(self.password_salt)
       hash_password
     end
@@ -35,8 +37,16 @@ module Yodel
       self.password = hash(self.password)
     end
     
+    # check if a plain text password matches the hashed, salted password
     def passwords_match?(password)
       self.password == hash(password) ? self : nil
+    end
+    
+    # create and set a new password for this user, returning the new plain text password
+    def reset_password
+      self.password = ''
+      PASS_LENGTH.times {self.password += SALT_ALPHABET.sample.chr}
+      self.password.tap {self.save}
     end
 
     private

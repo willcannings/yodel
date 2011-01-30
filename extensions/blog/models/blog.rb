@@ -18,7 +18,7 @@ module Yodel
     end
 
     def tag_path(tag)
-      "#{self.path}?tag=#{CGI::escape(tag)}"
+      "#{self.path}?tag=#{CGI::escape(tag || '')}"
     end
     
     def month_path(month, year)

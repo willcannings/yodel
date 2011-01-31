@@ -21,6 +21,10 @@ module Yodel
       @default_redirect ||= path
     end
     
+    def self.requirements(*requirements)
+      @requirements ||= requirements
+    end
+    
     def self.inherited(child)
       super(child)
       child.instance_variable_set('@send_to', @send_to)
@@ -31,16 +35,33 @@ module Yodel
     
     def send_mail
       settings = self.class
+      flash['form_sent'] = false
       if params.has_key?('redirect_to')
         redirect_to_address = params.delete('redirect_to')
-      else
+      elsif settings.default_redirect
         redirect_to_address = settings.default_redirect
+      else
+        redirect_to_address = request.referer
       end
       
       # remove unnecessary fields
       params.delete('glob')
       params.delete('format')
       params.delete('submit')
+      
+      # ensure any required fields have content
+      flash['errors'] = []
+      settings.requirements.each do |field|
+        if params[field].nil? || params[field] == ''
+          flash['errors'] << "#{field.titleize} is required"
+        end
+      end
+      
+      # redirect to the form if any required fields are empty
+      unless flash['errors'].empty?
+        response.redirect request.referer
+        return
+      end
       
       # we expect all form items to have values responding to to_s (i.e no files)
       form_content = params.collect do |key, value|
@@ -54,6 +75,7 @@ module Yodel
         body    "#{settings.body_prefix}\n\n#{form_content}"
       end
       
+      flash['form_sent'] = true
       response.redirect redirect_to_address
     end
   end

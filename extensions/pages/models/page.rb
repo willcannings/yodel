@@ -51,7 +51,7 @@ module Yodel
     
     def paragraphs_from(index, field=:content)
       text = self[field]
-      paragraphs = Hpricot(text).search('/p')
+      paragraphs = Hpricot(text).children
       unless paragraphs.nil? || paragraphs[index..-1].nil?
         paragraphs[index..-1].collect {|p| p.to_s}.join('')
       else

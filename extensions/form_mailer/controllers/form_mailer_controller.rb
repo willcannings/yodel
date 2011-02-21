@@ -17,12 +17,28 @@ module Yodel
       @body_prefix ||= prefix
     end
     
+    def self.user_body_prefix(prefix=nil)
+      @uer_body_prefix ||= prefix
+    end
+    
     def self.default_redirect(path=nil)
       @default_redirect ||= path
     end
     
     def self.requirements(*requirements)
       @requirements ||= requirements
+    end
+    
+    def self.send_to_user(*send)
+      if send.length == 0
+        @send_to_user
+      else
+        @send_to_user = send.first
+      end
+    end
+    
+    def self.user_email_field(field='email')
+      @user_email_field ||= field
     end
     
     def self.inherited(child)
@@ -68,11 +84,23 @@ module Yodel
         "#{key}: #{value}"
       end.join("\n")
       
+      # deliver the submission
       Mail.deliver do
         subject settings.subject
         from    settings.send_from
         to      settings.send_to
         body    "#{settings.body_prefix}\n\n#{form_content}"
+      end
+      
+      # also send to the user if required
+      if settings.send_to_user && params.has_key?(settings.user_email_field)
+        user_email_address = params[settings.user_email_field]
+        Mail.deliver do
+          subject settings.subject
+          from    settings.send_from
+          to      user_email_address
+          body    "#{settings.user_body_prefix}\n\n#{form_content}"
+        end
       end
       
       flash['form_sent'] = true

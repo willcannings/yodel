@@ -115,9 +115,9 @@ module Yodel
           elsif type.ancestors.include?(Time)
             # FIXME: this is just horrible.... only done to make the admin interface easy
             hash.delete(key)
-            hash[key + '_date'] = value.localtime.strftime("%d %b %Y")
-            hash[key + '_hour'] = value.localtime.hour
-            hash[key + '_min']  = value.localtime.min
+            hash[key + '_date'] = value.strftime("%d %b %Y")
+            hash[key + '_hour'] = value.hour
+            hash[key + '_min']  = value.min
           end
           next
         end

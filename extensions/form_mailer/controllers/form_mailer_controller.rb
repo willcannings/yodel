@@ -84,17 +84,24 @@ module Yodel
         "#{key}: #{value}"
       end.join("\n")
       
+      # either send the email from the user or from the address being sent to
+      if params.has_key?(settings.user_email_field)
+        from_address = params[settings.user_email_field]
+      else
+        from_address = settings.send_from
+      end
+        
       # deliver the submission
       Mail.deliver do
         subject settings.subject
-        from    settings.send_from
+        from    from_address
         to      settings.send_to
         body    "#{settings.body_prefix}\n\n#{form_content}"
       end
       
       # also send to the user if required
       if settings.send_to_user && params.has_key?(settings.user_email_field)
-        user_email_address = params[settings.user_email_field]
+        user_email_address = from_address
         Mail.deliver do
           subject settings.subject
           from    settings.send_from

@@ -77,10 +77,10 @@ module Yodel
         # handle associations specially
         self.class.model.associations.values.each do |association|
           # attachments are handled using mass assignment
-          next if association.type == :one && association.klass.ancestors.include?(Yodel::Attachment)
+          next if association.is_a?(MongoMapper::Plugins::Associations::OneAssociation) && association.klass.ancestors.include?(Yodel::Attachment)
           next unless association.options[:display] || association.name == :parent
           
-          if association.type == :belongs_to
+          if association.is_a?(MongoMapper::Plugins::Associations::BelongsToAssociation)
             new_value = values[association.name.to_s]
             if new_value
               if new_value != ''
@@ -91,7 +91,7 @@ module Yodel
             end
             
             values.delete(association.name.to_s)
-          elsif association.type == :many
+          elsif association.is_a?(MongoMapper::Plugins::Associations::ManyAssociation)
             has_many_assoc = record.send(association.name)
             has_many_assoc.nullify
             unless values[association.name.to_s].nil?

@@ -60,8 +60,9 @@ module Yodel
     end
     
     # rendering pages requires knowing a page permalink and layout to be used
-    before_validation_on_create :assign_permalink
+    before_validation :assign_permalink
     def assign_permalink
+      return unless new?
       base_permalink = self.title.parameterize('_')
       suffix = ''
       count  = 0

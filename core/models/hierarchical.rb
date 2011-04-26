@@ -56,8 +56,9 @@ module Yodel
       end
     end
     
-    before_validation_on_create :add_to_parent
+    before_validation :add_to_parent
     def add_to_parent
+      return unless new?
       if root?
         append_to_root
       else

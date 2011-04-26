@@ -198,6 +198,7 @@ module Yodel
         class_eval "
           def #{name}=(file)
             return if file.nil?
+            build_#{name} if #{name}.nil?
             if file[:tempfile]
               #{name}.build(attachment_name: '#{name}') if #{name}.nil?
               #{name}.set_file(file)

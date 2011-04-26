@@ -62,15 +62,15 @@ module Yodel
       name = name_for_key(model, association)
       id   = id_for_name(name)
 
-      if association.type == :belongs_to
-        return html_for_belongs_to_association(model, association, name, id)
-      elsif association.type == :one && association.klass.ancestors.include?(Yodel::Attachment)
+      if association.is_a?(MongoMapper::Plugins::Associations::OneAssociation) && association.klass.ancestors.include?(Yodel::Attachment)
         if association.klass.ancestors.include?(Yodel::ImageAttachment)
           return html_for_image_attachment(model, association, name, id)
         else
           return html_for_attachment(model, association, name, id)
         end
-      elsif association.type == :many
+      elsif association.is_a?(MongoMapper::Plugins::Associations::BelongsToAssociation)
+        return html_for_belongs_to_association(model, association, name, id)
+      elsif association.is_a?(MongoMapper::Plugins::Associations::ManyAssociation)
         return html_for_has_many_association(model, association, name, id)
       end
       

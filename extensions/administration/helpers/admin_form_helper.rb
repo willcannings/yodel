@@ -194,7 +194,7 @@ module Yodel
     end
     
     def html_for_has_many_association(model, association, name, id)
-      field_name = id_for_name(name_for_key(model, model.keys[association.options[:in]]))
+      field_name = id_for_name(name_for_key(model, model.keys[association.options[:in].to_s]))
       #field_name = association.options[:in].to_s
       html = "<ul class='has_many'>"
       association.klass.all(site_id: model.site_id).each do |record|

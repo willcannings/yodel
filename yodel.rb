@@ -2,10 +2,10 @@
 # app's root directory (loading rack in the process), but to make
 # requiring yodel simple, we require it here as well, so
 # require 'yodel' will work with no problems.
+require 'mongo_mapper'
+require 'image_science'
 require 'active_support/memoizable'
 require 'active_support/core_ext'
-require 'image_science'
-require 'mongo_mapper'
 require 'bigdecimal'
 require 'pathname'
 require 'hpricot'

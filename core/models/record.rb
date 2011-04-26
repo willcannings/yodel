@@ -90,7 +90,7 @@ module Yodel
         hash[key] = cleanse_hash(value) if value.is_a?(Hash)
         hash[key] = value.force_encoding("UTF-8") if value.is_a?(String)
         
-        if self.keys[key.to_sym].try(:type) && self.keys[key.to_sym].type.ancestors.include?(Tags)
+        if self.keys[key].try(:type) && self.keys[key].type.ancestors.include?(Tags)
           hash[key] = Tags.new(value).to_s
           next
         end

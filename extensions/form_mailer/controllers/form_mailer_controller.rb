@@ -17,8 +17,28 @@ module Yodel
       @body_prefix ||= prefix
     end
     
+    def self.user_body_prefix(prefix=nil)
+      @uer_body_prefix ||= prefix
+    end
+    
     def self.default_redirect(path=nil)
       @default_redirect ||= path
+    end
+    
+    def self.requirements(*requirements)
+      @requirements ||= requirements
+    end
+    
+    def self.send_to_user(*send)
+      if send.length == 0
+        @send_to_user
+      else
+        @send_to_user = send.first
+      end
+    end
+    
+    def self.user_email_field(field='email')
+      @user_email_field ||= field
     end
     
     def self.inherited(child)
@@ -31,10 +51,13 @@ module Yodel
     
     def send_mail
       settings = self.class
+      flash['form_sent'] = false
       if params.has_key?('redirect_to')
         redirect_to_address = params.delete('redirect_to')
-      else
+      elsif settings.default_redirect
         redirect_to_address = settings.default_redirect
+      else
+        redirect_to_address = request.referer
       end
       
       # remove unnecessary fields
@@ -42,18 +65,52 @@ module Yodel
       params.delete('format')
       params.delete('submit')
       
+      # ensure any required fields have content
+      flash['errors'] = []
+      settings.requirements.each do |field|
+        if params[field].nil? || params[field] == ''
+          flash['errors'] << "#{field.titleize} is required"
+        end
+      end
+      
+      # redirect to the form if any required fields are empty
+      unless flash['errors'].empty?
+        response.redirect request.referer
+        return
+      end
+      
       # we expect all form items to have values responding to to_s (i.e no files)
       form_content = params.collect do |key, value|
         "#{key}: #{value}"
       end.join("\n")
       
+      # either send the email from the user or from the address being sent to
+      if params.has_key?(settings.user_email_field)
+        from_address = params[settings.user_email_field]
+      else
+        from_address = settings.send_from
+      end
+        
+      # deliver the submission
       Mail.deliver do
         subject settings.subject
-        from    settings.send_from
+        from    from_address
         to      settings.send_to
         body    "#{settings.body_prefix}\n\n#{form_content}"
       end
       
+      # also send to the user if required
+      if settings.send_to_user && params.has_key?(settings.user_email_field)
+        user_email_address = from_address
+        Mail.deliver do
+          subject settings.subject
+          from    settings.send_from
+          to      user_email_address
+          body    "#{settings.user_body_prefix}\n\n#{form_content}"
+        end
+      end
+      
+      flash['form_sent'] = true
       response.redirect redirect_to_address
     end
   end

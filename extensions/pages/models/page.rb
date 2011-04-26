@@ -14,6 +14,7 @@ module Yodel
     key :show_in_menus, Boolean, tab: 'Behaviour', default: true
     key :show_in_search, Boolean, tab: 'Behaviour', default: true
     belongs_to :page_layout, class: Yodel::Layout, display: true, required: false, tab: 'Behaviour'
+    key :menu_root, Boolean, tab: 'Behaviour', default: false
     
     # SEO tab
     key :description, Text, tab: 'SEO'
@@ -50,7 +51,7 @@ module Yodel
     
     def paragraphs_from(index, field=:content)
       text = self[field]
-      paragraphs = Hpricot(text).search('/p')
+      paragraphs = Hpricot(text).children
       unless paragraphs.nil? || paragraphs[index..-1].nil?
         paragraphs[index..-1].collect {|p| p.to_s}.join('')
       else
@@ -92,6 +93,14 @@ module Yodel
     def first_parent(type)
       @parent_page = self
       until @parent_page.is_a?(type) || @parent_page.nil?
+        @parent_page = @parent_page.parent
+      end
+      @parent_page
+    end
+    
+    def parent_menu_root
+      @parent_page = self
+      until @parent_page.menu_root || @parent_page.nil?
         @parent_page = @parent_page.parent
       end
       @parent_page

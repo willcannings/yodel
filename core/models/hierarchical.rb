@@ -14,6 +14,10 @@ module Yodel
       @all_children ||= children + children.inject([]) {|records, child| records + child.all_children}
     end
     
+    def children_where(options={})
+      Yodel::Record.all({parent_id: self.id, order: 'index asc'}.merge(options))
+    end
+    
     def siblings
       unless self.parent_id.nil? || self.parent_id.blank?
         @siblings ||= Record.all parent_id: BSON::ObjectId.from_string(self.parent_id.to_s), order: 'index asc'

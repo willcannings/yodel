@@ -1,7 +1,9 @@
 module Yodel
   class Controller
     def snippet(name)
-      Snippet.first_for_site(site, {name: name}).content
+      snippet = Snippet.first_for_site(site, {name: name})
+      raise "Missing snippet: #{name}" if snippet.nil?
+      snippet.content
     end
   end
 end

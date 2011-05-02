@@ -200,7 +200,8 @@ module Yodel
             return if file.nil?
             build_#{name} if #{name}.nil?
             if file[:tempfile]
-              #{name}.build(attachment_name: '#{name}') if #{name}.nil?
+              #{name}.build if #{name}.nil?
+              #{name}.attachment_name = '#{name}'
               #{name}.set_file(file)
             else
               #{name}.replace(file)

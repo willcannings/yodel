@@ -67,4 +67,9 @@ Yodel.mime_types do
     extensions 'ics'
     mime_types 'text/calendar'
   end
+  
+  mime_type :csv do
+    extensions 'csv'
+    mime_types 'text/csv'
+  end
 end

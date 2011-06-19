@@ -21,5 +21,9 @@ module Yodel
     def not_found
       @app.call(@env)
     end
+    
+    def fail(status, body)
+      @app.call(@env)
+    end
   end
 end

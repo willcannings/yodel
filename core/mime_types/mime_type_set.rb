@@ -90,10 +90,8 @@ module Yodel
       if request.params['format']
         @extensions.include?(request.params['format'])
       else
-        @mime_types.each do |type|
-          return true if request.env['HTTP_ACCEPT'].include?(type)
-        end
-        false
+        return false if request.env['HTTP_ACCEPT'].blank?
+        @mime_types.any? {|type| request.env['HTTP_ACCEPT'].include?(type)}
       end
     end
   end
